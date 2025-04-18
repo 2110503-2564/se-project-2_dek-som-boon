@@ -33,10 +33,18 @@ export interface ReserveItem {
   createdAt: Dayjs
 }
 
-// export interface MassageShop {
-//   name: string;
-//   address: string;
-//   tel: string;
-//   openTime: string;
-//   closeTime: string;
-// }
+export interface Review {
+  _id: string;
+  title: string;
+  text: string;
+  rating: number;
+  user: string;
+  massageShop: string;
+  createdAt: string;
+}
+
+export interface ReviewJson {
+  success: boolean;
+  data: Review | Review[];
+}
+

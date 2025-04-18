@@ -7,14 +7,6 @@ export default async function createShop(
     closeTime: string
 ) {
     try {
-        // console.log("Creating Shop with data:");
-        // console.log("Token:", token);
-        // console.log("Name:", name);
-        // console.log("Address:", address);
-        // console.log("Tel:", tel);
-        // console.log("Open Time:", openTime);
-        // console.log("Close Time:", closeTime);
-
         const response = await fetch("https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops", {
             method: 'POST',
             headers: {
