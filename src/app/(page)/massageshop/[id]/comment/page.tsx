@@ -8,6 +8,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { useRef } from "react";
+import ConfirmPopup from "@/components/ConfirmPopup";
 
 interface Comment {
   _id: string;
@@ -62,6 +63,8 @@ export default function CommentPage() {
   const nextRef = useRef(null);
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showDelete, setShowDelete] = useState<Boolean>(false);
+  const [selecting2Delete, setSelecting2Delete] = useState<string | null>(null);
 
   const fetchReviews = async () => {
     const res = await fetch(
@@ -133,24 +136,36 @@ export default function CommentPage() {
   };
 
   const handleEdit = (c: Comment) => {
-    setShowForm(true);
+    setShowPopup(true);
     setNewComment(c.comment);
     setNewRating(c.score);
     setEditId(c._id);
   };
 
-  const handleDelete = async (reviewId: string) => {
+  const handleShowDelete = (c: Comment) => {
+    setShowDelete(true);
+    setSelecting2Delete(c._id);
+}
+
+  const handleDelete = async () => {
     if (!confirm("Delete this comment?")) return;
     const res = await fetch(
-      `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${reviewId}`,
+      `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${selecting2Delete}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
-    if (res.ok) setComments((prev) => prev.filter((c) => c._id !== reviewId));
+    setShowDelete(false);
+    setSelecting2Delete(null);
+    if (res.ok) setComments((prev) => prev.filter((c) => c._id !== selecting2Delete));
     else alert("Failed to delete.");
   };
+
+  const handleCloseDelete = () => {
+    setShowDelete(false);
+    setSelecting2Delete(null);
+};
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[140px] px-4 md:px-10">
@@ -263,6 +278,7 @@ export default function CommentPage() {
                   setEditId(null);
                   setNewComment("");
                   setNewRating(0);
+                  setShowOnlyMine(!showOnlyMine);
                 }}
                 className="text-sm bg-white border border-gray-300 hover:bg-gray-100 px-4 py-1 rounded"
               >
@@ -270,40 +286,7 @@ export default function CommentPage() {
               </button>
             )}
           </div>
-
-          {/* Comment Form */}
-          {showForm && (
-            <div className="space-y-3 mb-6">
-              <div>
-                <label className="block text-sm font-medium mb-1">Rating</label>
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <StarIcon
-                      key={s}
-                      onClick={() => setNewRating(s)}
-                      style={{
-                        cursor: "pointer",
-                        color: s <= newRating ? "#fbbf24" : "#d1d5db",
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-              <textarea
-                rows={3}
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Write your comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <button
-                onClick={handleSubmit}
-                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-500"
-              >
-                {editId ? "Update" : "Submit"}
-              </button>
-            </div>
-          )}
+          
 
           {/* Review List */}
           <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
@@ -346,7 +329,7 @@ export default function CommentPage() {
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(c._id)}
+                onClick={() => handleShowDelete(c)}
                 className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-red-500"
               >
                 Del
@@ -434,7 +417,7 @@ export default function CommentPage() {
       </Swiper>
     </div>
     {showPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm backdrop-brightness-50">
     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
       <h3 className="text-lg font-semibold text-center mb-4">Review</h3>
 
@@ -473,7 +456,7 @@ export default function CommentPage() {
             onClick={() => setShowPopup(false)}
             className="bg-[#191945] text-white px-6 py-2 rounded font-semibold hover:bg-[#2c2c7a]"
           >
-            Cancell
+            Cancel
         </button>
         <button
             onClick={async () => {
@@ -488,6 +471,14 @@ export default function CommentPage() {
         </div>
       </div>
     )}
+
+    {/* delete pop up */}
+    {showDelete && (
+      <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+          <ConfirmPopup onClose={handleCloseDelete} onDelete={handleDelete} title={"Are you sure you want to delete this comment?"}/>
+          {/* <p>{selecting2Delete}</p> */}
+      </div>
+      )}
     </div>
   );
 }
