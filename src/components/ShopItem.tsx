@@ -16,10 +16,13 @@ export default function ShopItem({
   isAdmin: Boolean;
 }) {
   return (
-    <div className="relative">
-      <Link href={`/massageshop/${shop._id}/comment`} className="absolute inset-0 z-10" />
-      <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm relative z-0">
-        {/* Image (left) */}
+    <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm">
+      {/* Clickable Area (Image + Info) */}
+      <Link
+        href={`/massageshop/${shop._id}/comment`}
+        className="flex items-center flex-grow mr-4 no-underline rounded-lg transition p-2"
+      >
+        {/* Image */}
         <div className="w-24 h-24 flex-shrink-0 mr-4">
           <img
             src="/image/massageshop.jpg" // Replace with shop.image if available
@@ -28,8 +31,8 @@ export default function ShopItem({
           />
         </div>
 
-        {/* Info (middle) */}
-        <div className="flex-grow text-sm">
+        {/* Info */}
+        <div className="text-sm text-left">
           <h2 className="text-lg font-semibold text-gray-800">{shop.name}</h2>
 
           {/* ⭐ Rating */}
@@ -47,6 +50,12 @@ export default function ShopItem({
             <span className="ml-1 text-gray-500 text-xs">({shop.reviewerCount})</span>
           </div>
 
+          {/* 💬 Comments */}
+          <div className="flex items-center mt-1 text-gray-600 text-sm">
+            <ChatBubbleOutlineIcon style={{ fontSize: "1rem", color: "#6b7280" }} />
+            <span className="ml-1">{shop.reviewerCount} comments</span>
+          </div>
+
           {/* 📍 Address & Info */}
           <p className="text-gray-500 mt-1">{shop.address}</p>
           <p className="text-gray-500">Tel: {shop.tel}</p>
@@ -54,24 +63,24 @@ export default function ShopItem({
             Open: {shop.openTime} - {shop.closeTime}
           </p>
         </div>
+      </Link>
 
-        {/* Button (right) */}
-        <div className="ml-4 flex-shrink-0 z-20">
-          {!isAdmin ? (
-            <Link href={`/reservation?shopId=${shop._id}`}>
-              <button className="bg-red-600 hover:bg-red-500 text-white px-5 py-2 rounded-full transition">
-                Reserve
-              </button>
-            </Link>
-          ) : (
-            <button
-              onClick={() => showDeletePopup(shop._id)}
-              className="bg-red-600 hover:bg-red-500 text-white px-5 py-2 rounded-full transition"
-            >
-              Delete
+      {/* Button Area */}
+      <div className="flex-shrink-0 z-20">
+        {!isAdmin ? (
+          <Link href={`/reservation?shopId=${shop._id}`}>
+            <button className="bg-red-600 hover:bg-red-500 hover:cursor-pointer text-white px-5 py-2 rounded-full transition">
+              Reserve
             </button>
-          )}
-        </div>
+          </Link>
+        ) : (
+          <button
+            onClick={() => showDeletePopup(shop._id)}
+            className="bg-red-600 hover:bg-red-500 text-white px-5 py-2 rounded-full transition"
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );
