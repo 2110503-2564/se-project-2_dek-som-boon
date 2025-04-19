@@ -8,7 +8,6 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { useRef } from "react";
-import getUserProfile from "@/libs/getUserProfile";
 
 interface Comment {
   _id: string;
@@ -37,9 +36,21 @@ interface Shop {
   image?: string;
 }
 
+async function getUserProfile(token: string): Promise<User> {
+  const res = await fetch(
+    "https://antony-massage-backend-production.up.railway.app/api/v1/auth/me",
+    {
+      method: "GET",
+      headers: { authorization: `Bearer ${token}` },
+    }
+  );
+  if (!res.ok) throw new Error("Cannot get user profile");
+  const json = await res.json();
+  return json.data;
+}
 
 export default function CommentPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // massageShopId
   const [comments, setComments] = useState<Comment[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -54,7 +65,7 @@ export default function CommentPage() {
 
   const fetchReviews = async () => {
     const res = await fetch(
-      `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`,
+      `http://localhost:5000/api/v1/massage-shops/${id}/reviews`,
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     const json = await res.json();
@@ -74,7 +85,7 @@ export default function CommentPage() {
 
   const fetchShop = async () => {
     try {
-      const res = await fetch(`https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}`);
+      const res = await fetch(`http://localhost:5000/api/v1/massage-shops/${id}`);
       const json = await res.json();
       setShop(json.data);
     } catch (err) {
@@ -99,8 +110,8 @@ export default function CommentPage() {
     }
     const payload = { comment: newComment, score: newRating };
     const url = editId
-      ? `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${editId}`
-      : `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`;
+      ? `http://localhost:5000/api/v1/reviews/${editId}`
+      : `http://localhost:5000/api/v1/massage-shops/${id}/reviews`;
     const method = editId ? "PUT" : "POST";
     const res = await fetch(url, {
       method,
@@ -131,7 +142,7 @@ export default function CommentPage() {
   const handleDelete = async (reviewId: string) => {
     if (!confirm("Delete this comment?")) return;
     const res = await fetch(
-      `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${reviewId}`,
+      `http://localhost:5000/api/v1/reviews/${reviewId}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -241,7 +252,7 @@ export default function CommentPage() {
           </div>
         </div>
 
-        
+        {/* User Review Section */}
         <div>
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-semibold text-gray-800 text-lg">User review</h2>
@@ -260,7 +271,7 @@ export default function CommentPage() {
             )}
           </div>
 
-          
+          {/* Comment Form */}
           {showForm && (
             <div className="space-y-3 mb-6">
               <div>
@@ -294,7 +305,7 @@ export default function CommentPage() {
             </div>
           )}
 
-          
+          {/* Review List */}
           <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
   {[...comments]
     .filter((c) => !showOnlyMine || c.user._id === user?._id)
@@ -304,13 +315,13 @@ export default function CommentPage() {
         key={c._id}
         className="flex items-center justify-between bg-gray-100 px-4 py-3 rounded-lg shadow-sm text-sm"
       >
-        
+        {/* 👤 User Info + Comment */}
         <div>
           <p className="font-semibold text-gray-800">{c.user.name}</p>
           <p className="text-gray-600">{c.comment}</p>
         </div>
 
-        
+        {/* ⭐ Rating + Buttons */}
         <div className="flex items-center space-x-2">
           {/* ⭐ Stars */}
           <div className="flex items-center">
@@ -325,7 +336,7 @@ export default function CommentPage() {
             ))}
           </div>
 
-          
+          {/* ✏️ Edit / ❌ Delete */}
           {canEditOrDelete(c.user._id) && (
             <>
               <button
@@ -361,14 +372,14 @@ export default function CommentPage() {
         </button>
       </div>
 
-      
+      {/* 🧑‍ Our หมอนวด Title */}
       <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
         Our หมอนวด
       </h2>
 
-      
-      <div className="relative w-full max-w-3xl mx-auto mt-8 mb-10">
-      
+      {/* 🌀 Swiper Carousel */}
+      <div className="relative w-full max-w-3xl mx-auto mt-14">
+      {/* Arrows */}
       <button
         ref={prevRef}
         className="absolute z-10 left-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
@@ -427,6 +438,7 @@ export default function CommentPage() {
     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
       <h3 className="text-lg font-semibold text-center mb-4">Review</h3>
 
+      {/* ⭐ Rating */}
       <div className="flex justify-center mb-4">
         {[1, 2, 3, 4, 5].map((s) => (
           <StarIcon
@@ -441,6 +453,7 @@ export default function CommentPage() {
         ))}
       </div>
 
+      {/* 📝 Comment box */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Comment
@@ -454,6 +467,7 @@ export default function CommentPage() {
         />
       </div>
 
+      {/* ❌ Cancel / ✅ Post */}
       <div className="flex justify-between">
         <button
             onClick={() => setShowPopup(false)}
