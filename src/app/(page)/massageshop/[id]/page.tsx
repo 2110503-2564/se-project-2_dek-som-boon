@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { useRef } from "react";
 import ConfirmPopup from "@/components/ConfirmPopup";
+import Image from "next/image";
 
 interface Comment {
   _id: string;
@@ -148,7 +149,7 @@ export default function CommentPage() {
 }
 
   const handleDelete = async () => {
-    if (!confirm("Delete this comment?")) return;
+    // if (!confirm("Delete this comment?")) return;
     const res = await fetch(
       `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${selecting2Delete}`,
       {
@@ -198,10 +199,12 @@ export default function CommentPage() {
         <div className="grid md:grid-cols-2 gap-6 items-stretch">
           {/* 🖼 Image */}
           <div className="flex justify-center">
-            <img
+            <Image
               src={shop?.image || "/image/massageshop.jpg"}
               alt="Shop"
               className="w-full h-48 object-cover rounded-xl"
+              width="1920"
+              height="1080"
             />
           </div>
 
@@ -223,7 +226,7 @@ export default function CommentPage() {
             {/* Bottom: Reserve Button */}
             <div className="pt-4">
               <Link href={`/reservation?shopId=${id}`}>
-                <button className="bg-red-600 hover:bg-red-500 text-white font-medium px-6 py-2 rounded-lg w-full hover:cursor-pointer transition">
+                <button className="bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-2 rounded-lg w-full hover:cursor-pointer transition">
                   Reserve
                 </button>
               </Link>
@@ -234,6 +237,7 @@ export default function CommentPage() {
 
 
         {/* Review Summary */}
+        <h2 className="font-semibold text-gray-800 text-lg">Review Summary</h2>
         <div className="grid md:grid-cols-2 gap-6 items-start">
           <div className="space-y-1 text-sm">
             {[5, 4, 3, 2, 1].map((score) => {
@@ -280,7 +284,7 @@ export default function CommentPage() {
                   setNewRating(0);
                   setShowOnlyMine(!showOnlyMine);
                 }}
-                className="text-sm bg-white border border-gray-300 hover:bg-gray-100 px-4 py-1 rounded"
+                className="text-sm bg-white border border-gray-300 hover:bg-gray-100 px-4 py-1 rounded  hover:cursor-pointer"
               >
                 {showForm ? "Cancel" : "Your review"}
               </button>
@@ -324,13 +328,13 @@ export default function CommentPage() {
             <>
               <button
                 onClick={() => handleEdit(c)}
-                className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-blue-400"
+                className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-blue-400 hover:cursor-pointer"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleShowDelete(c)}
-                className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-red-500"
+                className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-red-500 hover:cursor-pointer"
               >
                 Del
               </button>
@@ -350,20 +354,20 @@ export default function CommentPage() {
           setNewComment("");
           setNewRating(0);
         }}
-        className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold text-base py-3 rounded-full shadow-md transition">
-          + Add a review
+        className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold text-base py-3 rounded-lg shadow-md transition hover:cursor-pointer">
+          Add a review
         </button>
       </div>
-
+      <div className="mb-10"></div>
       {/* 🧑‍ Our หมอนวด Title */}
-      <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
+      {/* <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
         Our หมอนวด
-      </h2>
+      </h2> */}
 
       {/* 🌀 Swiper Carousel */}
-      <div className="relative w-full max-w-3xl mx-auto mt-14">
+      {/* <div className="relative w-full max-w-3xl mx-auto mt-14"> */}
       {/* Arrows */}
-      <button
+      {/* <button
         ref={prevRef}
         className="absolute z-10 left-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
       >
@@ -374,9 +378,9 @@ export default function CommentPage() {
         className="absolute z-10 right-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
       >
         →
-      </button>
+      </button> */}
 
-      <Swiper
+      {/* <Swiper
         modules={[Navigation]}
         spaceBetween={24}
         slidesPerView={3}
@@ -415,11 +419,12 @@ export default function CommentPage() {
           </SwiperSlide>
         ))}
       </Swiper>
-    </div>
+    </div> */}
+
     {showPopup && (
   <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm backdrop-brightness-50">
     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <h3 className="text-lg font-semibold text-center mb-4">Review</h3>
+    <h3 className="block text-lg font-semibold mb-2 w-full text-center">Review</h3>
 
       {/* ⭐ Rating */}
       <div className="flex justify-center mb-4">
@@ -438,9 +443,9 @@ export default function CommentPage() {
 
       {/* 📝 Comment box */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Comment
-        </label>
+          <label className="block text-base font-semibold text-black mb-1">
+            Comment
+          </label>
         <textarea
           rows={3}
           value={newComment}
@@ -451,10 +456,10 @@ export default function CommentPage() {
       </div>
 
       {/* ❌ Cancel / ✅ Post */}
-      <div className="flex justify-between">
+      <div className="flex gap-4">
         <button
             onClick={() => setShowPopup(false)}
-            className="bg-[#191945] text-white px-6 py-2 rounded font-semibold hover:bg-[#2c2c7a]"
+            className="w-full bg-gray-800 text-white py-3 rounded-lg font-semibold text-lg hover:bg-gray-700 hover:cursor-pointer transition"
           >
             Cancel
         </button>
@@ -463,7 +468,7 @@ export default function CommentPage() {
               await handleSubmit();
               setShowPopup(false);
             }}
-            className="bg-green-600 text-white px-6 py-2 rounded font-semibold hover:bg-green-500"
+            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-red-500 hover:cursor-pointer transition"
           >
             Post
           </button>
