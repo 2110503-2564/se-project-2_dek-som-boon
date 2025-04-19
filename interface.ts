@@ -5,7 +5,9 @@ export interface MassageItem {
   address: string,
   tel:string,
   openTime:string,
-  closeTime:string
+  closeTime:string,
+  averageRating: number,
+  reviewerCount: number
 }
 
 export interface MassageJson {

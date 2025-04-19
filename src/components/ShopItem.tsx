@@ -15,13 +15,6 @@ export default function ShopItem({
   showDeletePopup: Function;
   isAdmin: Boolean;
 }) {
-  const [dummyRating, setDummyRating] = useState(0);
-  const [dummyComments, setDummyComments] = useState(0);
-
-  useEffect(() => {
-    setDummyRating(Math.floor(Math.random() * 3) + 3); // 3–5 stars
-    setDummyComments(Math.floor(Math.random() * 10) + 1); // 1–10 comments
-  }, []);
 
   return (
     <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm">
@@ -40,23 +33,23 @@ export default function ShopItem({
 
         {/* ⭐ Rating */}
         <div className="flex items-center mt-1">
-          <span className="text-gray-700 mr-1">{dummyRating}</span>
+          <span className="text-gray-700 mr-1">{shop.averageRating.toFixed(1)}</span>
           {Array.from({ length: 5 }).map((_, index) => (
             <StarIcon
               key={index}
               style={{
-                color: index < dummyRating ? "#facc15" : "#e5e7eb",
+                color: index < shop.averageRating ? "#facc15" : "#e5e7eb",
                 fontSize: "1rem",
               }}
             />
           ))}
-          <span className="ml-1 text-gray-500 text-xs">({dummyComments})</span>
+          <span className="ml-1 text-gray-500 text-xs">({shop.reviewerCount})</span>
         </div>
 
         {/* 💬 Comments */}
         <div className="flex items-center mt-1 text-gray-600 text-sm">
           <ChatBubbleOutlineIcon style={{ fontSize: "1rem", color: "#6b7280" }} />
-          <span className="ml-1">{dummyComments} comments</span>
+          <span className="ml-1">{shop.reviewerCount} comments</span>
           <Link href={`/massageshop/${shop._id}/comment`}>
             <button className="ml-3 text-blue-600 hover:underline text-sm">
               View/Add Comment

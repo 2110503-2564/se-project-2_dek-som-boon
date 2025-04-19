@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { useRef } from "react";
 
 interface Comment {
   _id: string;
@@ -22,6 +27,15 @@ interface User {
   role: string;
 }
 
+interface Shop {
+  name: string;
+  address: string;
+  openTime: string;
+  closeTime: string;
+  tel: string;
+  image?: string;
+}
+
 async function getUserProfile(token: string): Promise<User> {
   const res = await fetch(
     "https://antony-massage-backend-production.up.railway.app/api/v1/auth/me",
@@ -32,7 +46,6 @@ async function getUserProfile(token: string): Promise<User> {
   );
   if (!res.ok) throw new Error("Cannot get user profile");
   const json = await res.json();
-  // your API returns { success: true, data: { ...user fields... } }
   return json.data;
 }
 
@@ -44,8 +57,12 @@ export default function CommentPage() {
   const [newRating, setNewRating] = useState(0);
   const [editId, setEditId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [shop, setShop] = useState<Shop | null>(null);
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+  const [showOnlyMine, setShowOnlyMine] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Fetch reviews for this shop
   const fetchReviews = async () => {
     const res = await fetch(
       `http://localhost:5000/api/v1/massage-shops/${id}/reviews`,
@@ -55,7 +72,6 @@ export default function CommentPage() {
     setComments(json.data);
   };
 
-  // Fetch current profile
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -67,9 +83,20 @@ export default function CommentPage() {
     }
   };
 
+  const fetchShop = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/v1/massage-shops/${id}`);
+      const json = await res.json();
+      setShop(json.data);
+    } catch (err) {
+      console.error("Failed to fetch shop info", err);
+    }
+  };
+
   useEffect(() => {
     fetchReviews();
     fetchUser();
+    fetchShop();
   }, [id]);
 
   const canEditOrDelete = (commentUserId: string) => {
@@ -126,99 +153,341 @@ export default function CommentPage() {
   };
 
   return (
-    <div className="flex flex-col items-center p-10 w-full pt-20 md:pt-10">
-      <h1 className="text-4xl font-bold text-center mb-4">💬 COMMENTS</h1>
-      <Link href="/massageshop">
-        <button className="mb-6 bg-gray-300 hover:bg-gray-400 px-6 py-2 rounded">
-          ← Back to Shops
-        </button>
-      </Link>
+    <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[140px] px-4 md:px-10">
+      <div className="w-full max-w-3xl space-y-4">
 
-      {/* Add/Edit Form Toggle */}
-      <button
+        {/* Header + Go Back */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">{shop?.name || "Loading..."}</h1>
+          <Link href="/massageshop">
+            <button className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg hover:cursor-pointer transition">
+              ← Go back
+            </button>
+          </Link>
+        </div>
+
+        {/* Star Rating Below Name */}
+        <div className="flex items-center">
+          <span className="text-gray-700 text-sm mr-2">
+            {comments.length > 0
+              ? (comments.reduce((s, c) => s + c.score, 0) / comments.length).toFixed(1)
+              : "0.0"}
+          </span>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <StarIcon key={i} style={{ fontSize: "1rem", color: i <= (comments.reduce((s, c) => s + c.score, 0) / comments.length || 0) ? "#facc15" : "#e5e7eb" }} />
+          ))}
+          <span className="text-gray-500 text-sm ml-2">({comments.length})</span>
+        </div>
+
+        {/* Shop Top Info */}
+        <div className="grid md:grid-cols-2 gap-6 items-stretch">
+          {/* 🖼 Image */}
+          <div className="flex justify-center">
+            <img
+              src={shop?.image || "/image/massageshop.jpg"}
+              alt="Shop"
+              className="w-full h-48 object-cover rounded-xl"
+            />
+          </div>
+
+          {/* 📄 Detail + 🔘 Button aligned to bottom */}
+          <div className="flex flex-col justify-between">
+            {/* Top: Text Info */}
+            <div className="space-y-2">
+              <p className="text-gray-800">
+                <span className="font-semibold">Address:</span> {shop?.address || "-"}
+              </p>
+              <p className="text-gray-800">
+                <span className="font-semibold">Open:</span> {shop?.openTime || "--:--"} - {shop?.closeTime || "--:--"}
+              </p>
+              <p className="text-gray-800">
+                <span className="font-semibold">Tel:</span> {shop?.tel || "-"}
+              </p>
+            </div>
+
+            {/* Bottom: Reserve Button */}
+            <div className="pt-4">
+              <Link href={`/reservation?shopId=${id}`}>
+                <button className="bg-red-600 hover:bg-red-500 text-white font-medium px-6 py-2 rounded-lg w-full hover:cursor-pointer transition">
+                  Reserve
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/* Review Summary */}
+        <div className="grid md:grid-cols-2 gap-6 items-start">
+          <div className="space-y-1 text-sm">
+            {[5, 4, 3, 2, 1].map((score) => {
+              const count = comments.filter((c) => c.score === score).length;
+              const percent = (count / comments.length) * 100 || 0;
+              return (
+                <div key={score} className="flex items-center space-x-2">
+                  <span className="w-4">{score}</span>
+                  <div className="flex-1 bg-gray-200 h-2 rounded">
+                    <div
+                      className="h-2 bg-yellow-400 rounded"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-5xl font-bold text-yellow-500">
+              {comments.length > 0
+                ? (comments.reduce((s, c) => s + c.score, 0) / comments.length).toFixed(1)
+                : "0.0"}
+            </span>
+            <div className="flex mt-1">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <StarIcon key={i} style={{ color: i <= (comments.reduce((s, c) => s + c.score, 0) / comments.length || 0) ? "#facc15" : "#e5e7eb" }} />
+              ))}
+            </div>
+            <span className="text-sm text-gray-500">{comments.length} Reviews</span>
+          </div>
+        </div>
+
+        {/* User Review Section */}
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="font-semibold text-gray-800 text-lg">User review</h2>
+            {user && (
+              <button
+                onClick={() => {
+                  setShowForm(!showForm);
+                  setEditId(null);
+                  setNewComment("");
+                  setNewRating(0);
+                }}
+                className="text-sm bg-white border border-gray-300 hover:bg-gray-100 px-4 py-1 rounded"
+              >
+                {showForm ? "Cancel" : "Your review"}
+              </button>
+            )}
+          </div>
+
+          {/* Comment Form */}
+          {showForm && (
+            <div className="space-y-3 mb-6">
+              <div>
+                <label className="block text-sm font-medium mb-1">Rating</label>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <StarIcon
+                      key={s}
+                      onClick={() => setNewRating(s)}
+                      style={{
+                        cursor: "pointer",
+                        color: s <= newRating ? "#fbbf24" : "#d1d5db",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <textarea
+                rows={3}
+                className="w-full border border-gray-300 rounded p-2"
+                placeholder="Write your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <button
+                onClick={handleSubmit}
+                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-500"
+              >
+                {editId ? "Update" : "Submit"}
+              </button>
+            </div>
+          )}
+
+          {/* Review List */}
+          <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+  {[...comments]
+    .filter((c) => !showOnlyMine || c.user._id === user?._id)
+    .reverse()
+    .map((c) => (
+      <div
+        key={c._id}
+        className="flex items-center justify-between bg-gray-100 px-4 py-3 rounded-lg shadow-sm text-sm"
+      >
+        {/* 👤 User Info + Comment */}
+        <div>
+          <p className="font-semibold text-gray-800">{c.user.name}</p>
+          <p className="text-gray-600">{c.comment}</p>
+        </div>
+
+        {/* ⭐ Rating + Buttons */}
+        <div className="flex items-center space-x-2">
+          {/* ⭐ Stars */}
+          <div className="flex items-center">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <StarIcon
+                key={i}
+                style={{
+                  fontSize: "1rem",
+                  color: i <= Math.round(c.score) ? "#fbbf24" : "#d1d5db",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* ✏️ Edit / ❌ Delete */}
+          {canEditOrDelete(c.user._id) && (
+            <>
+              <button
+                onClick={() => handleEdit(c)}
+                className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-blue-400"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(c._id)}
+                className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-red-500"
+              >
+                Del
+              </button>
+            </>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
+        </div>
+      </div>
+      <div className="w-full max-w-3xl mt-10 px-4 md:px-0">
+        <button 
         onClick={() => {
-          setShowForm(!showForm);
+          setShowPopup(true);
           setEditId(null);
           setNewComment("");
           setNewRating(0);
         }}
-        className="mb-4 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded"
+        className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold text-base py-3 rounded-full shadow-md transition">
+          + Add a review
+        </button>
+      </div>
+
+      {/* 🧑‍ Our หมอนวด Title */}
+      <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
+        Our หมอนวด
+      </h2>
+
+      {/* 🌀 Swiper Carousel */}
+      <div className="relative w-full max-w-3xl mx-auto mt-14">
+      {/* Arrows */}
+      <button
+        ref={prevRef}
+        className="absolute z-10 left-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
       >
-        {showForm ? "Cancel" : "+ Add Comment & Rating"}
+        ←
+      </button>
+      <button
+        ref={nextRef}
+        className="absolute z-10 right-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+      >
+        →
       </button>
 
-      {showForm && (
-        <div className="w-full max-w-2xl bg-gray-50 p-6 rounded shadow mb-6">
-          <div className="mb-4">
-            <label className="block mb-1">Rating:</label>
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <StarIcon
-                  key={s}
-                  onClick={() => setNewRating(s)}
-                  style={{
-                    cursor: "pointer",
-                    color: s <= newRating ? "#fbbf24" : "#d1d5db",
-                  }}
-                />
-              ))}
+      <Swiper
+        modules={[Navigation]}
+        spaceBetween={24}
+        slidesPerView={3}
+        navigation={{
+          prevEl: prevRef.current!,
+          nextEl: nextRef.current!,
+        }}
+        onBeforeInit={(swiper) => {
+          // @ts-ignore
+          swiper.params.navigation.prevEl = prevRef.current;
+          // @ts-ignore
+          swiper.params.navigation.nextEl = nextRef.current;
+        }}
+        breakpoints={{
+          320: { slidesPerView: 1 },
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }}
+        loop
+      >
+        {[1, 2, 3, 4, 5].map((i) => (
+          <SwiperSlide key={i}>
+            <div className="w-[180px] bg-white border rounded-xl shadow-md px-4 py-6 text-center transition hover:shadow-lg mx-auto">
+              <img
+                src="/image/antony.jpg"
+                alt="Therapist"
+                className="w-20 h-20 mx-auto rounded-full object-cover mb-4 border-2 border-gray-300"
+              />
+              <h3 className="font-semibold text-base text-gray-800">Ant Man Uni</h3>
+              <ul className="text-sm mt-3 text-left list-disc ml-6 text-gray-600 leading-relaxed">
+                <li>ความเชี่ยวชาญ 1</li>
+                <li>ความเชี่ยวชาญ 2</li>
+                <li>ความเชี่ยวชาญ 3</li>
+              </ul>
             </div>
-          </div>
-          <textarea
-            rows={4}
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="w-full p-2 border rounded mb-4"
-            placeholder="Write your comment..."
-          />
-          <button
-            onClick={handleSubmit}
-            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded"
-          >
-            {editId ? "Update" : "Submit"}
-          </button>
-        </div>
-      )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+    {showPopup && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h3 className="text-lg font-semibold text-center mb-4">Review</h3>
 
-      <div className="w-full max-w-2xl space-y-4">
-      {[...comments].reverse().map((c) => (
-          <div
-            key={c._id}
-            className="bg-gray-100 rounded-lg shadow-sm p-4 shadow flex flex-col"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">{c.user.name}</span>
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <StarIcon
-                    key={s}
-                    style={{
-                      color: s <= c.score ? "#fbbf24" : "#d1d5db",
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            <p className="mb-2">{c.comment}</p>
-            {canEditOrDelete(c.user._id) && (
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => handleEdit(c)}
-                  className="text-blue-600 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(c._id)}
-                  className="text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
+      {/* ⭐ Rating */}
+      <div className="flex justify-center mb-4">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <StarIcon
+            key={s}
+            onClick={() => setNewRating(s)}
+            style={{
+              cursor: "pointer",
+              fontSize: "2rem",
+              color: s <= newRating ? "#facc15" : "#d1d5db",
+            }}
+          />
         ))}
       </div>
+
+      {/* 📝 Comment box */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Comment
+        </label>
+        <textarea
+          rows={3}
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          className="w-full p-2 border border-gray-200 bg-gray-50 rounded"
+          placeholder="Write your review here..."
+        />
+      </div>
+
+      {/* ❌ Cancel / ✅ Post */}
+      <div className="flex justify-between">
+        <button
+            onClick={() => setShowPopup(false)}
+            className="bg-[#191945] text-white px-6 py-2 rounded font-semibold hover:bg-[#2c2c7a]"
+          >
+            Cancel
+        </button>
+        <button
+            onClick={async () => {
+              await handleSubmit();
+              setShowPopup(false);
+            }}
+            className="bg-green-600 text-white px-6 py-2 rounded font-semibold hover:bg-green-500"
+          >
+            Post
+          </button>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
   );
 }
