@@ -65,7 +65,7 @@ export default function CommentPage() {
 
   const fetchReviews = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/v1/massage-shops/${id}/reviews`,
+      `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`,
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     const json = await res.json();
@@ -85,7 +85,7 @@ export default function CommentPage() {
 
   const fetchShop = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/massage-shops/${id}`);
+      const res = await fetch(`https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}`);
       const json = await res.json();
       setShop(json.data);
     } catch (err) {
@@ -110,8 +110,8 @@ export default function CommentPage() {
     }
     const payload = { comment: newComment, score: newRating };
     const url = editId
-      ? `http://localhost:5000/api/v1/reviews/${editId}`
-      : `http://localhost:5000/api/v1/massage-shops/${id}/reviews`;
+      ? `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${editId}`
+      : `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`;
     const method = editId ? "PUT" : "POST";
     const res = await fetch(url, {
       method,
@@ -142,7 +142,7 @@ export default function CommentPage() {
   const handleDelete = async (reviewId: string) => {
     if (!confirm("Delete this comment?")) return;
     const res = await fetch(
-      `http://localhost:5000/api/v1/reviews/${reviewId}`,
+      `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${reviewId}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
