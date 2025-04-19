@@ -473,7 +473,7 @@ export default function CommentPage() {
             onClick={() => setShowPopup(false)}
             className="bg-[#191945] text-white px-6 py-2 rounded font-semibold hover:bg-[#2c2c7a]"
           >
-            Cancel
+            Cancell
         </button>
         <button
             onClick={async () => {
