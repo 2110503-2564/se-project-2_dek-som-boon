@@ -3,13 +3,17 @@ import Link from "next/link";
 export default function Banner() {
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full md:p-10 py-10 px-5 bg-gray-100 pt-60">
-      {/* ส่วนหัวข้อความเหมือนเดิม ไม่เปลี่ยน layout */}
       <h1 className="text-xl font-semibold text-gray-600">Welcome to</h1>
-      <h2 className="text-5xl font-bold mt-2">
-        <span className="text-red-600">Antony</span> Massage
+
+      {/* 🔁 Updated brand name */}
+      <h2 className="text-5xl font-bold mt-2 text-center">
+        <span className="text-red-600">Dek</span>
+        <span className="text-orange-500">Som</span>
+        <span className="text-blue-500">Boon</span>
+        <span className="text-black"> Massage</span>
       </h2>
 
-      {/* ปุ่มลิงก์: responsive layout */}
+      {/* ปุ่มลิงก์เหมือนเดิม */}
       <div className="mt-10 w-full max-w-xs md:w-3/4 md:max-w-4xl">
         <div className="flex flex-col gap-3 md:grid md:grid-cols-4 md:grid-rows-2">
           <Link href="/reservation" className="md:col-span-2 md:row-span-2">

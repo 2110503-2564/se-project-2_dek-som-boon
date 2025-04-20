@@ -169,11 +169,11 @@ export default function CommentPage() {
 };
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[140px] px-4 md:px-10">
+    <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[180px] md:pt-[140px] pb-[100px] px-4 md:px-10">
       <div className="w-full max-w-3xl space-y-4">
 
         {/* Header + Go Back */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <h1 className="text-2xl font-bold text-gray-900">{shop?.name || "Loading..."}</h1>
           <Link href="/massageshop">
             <button className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg hover:cursor-pointer transition">
@@ -196,7 +196,7 @@ export default function CommentPage() {
         </div>
 
         {/* Shop Top Info */}
-        <div className="grid md:grid-cols-2 gap-6 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {/* 🖼 Image */}
           <div className="flex justify-center">
             <Image

@@ -38,7 +38,7 @@ export default function SideMenu({ setLogin }: { setLogin: (login: boolean) => v
 
   return (
     <>
-      <div className="fixed bottom-0 w-full bg-white border-t border-gray-200 py-2 px-4 flex justify-between md:hidden">
+      <div className="fixed bottom-0 w-full bg-white border-t border-gray-200 py-2 px-4 flex justify-between md:hidden z-30">
         <NavItemMobile href="/" pathname={pathname} icon={Home} label="Home" />
         <NavItemMobile href="/massageshop" pathname={pathname} icon={Map} label="Shops" />
         
