@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -53,6 +53,7 @@ async function getUserProfile(token: string): Promise<User> {
 
 export default function CommentPage() {
   const { id } = useParams(); // massageShopId
+  const router = useRouter(); // Initialize the router
   const [comments, setComments] = useState<Comment[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -348,15 +349,23 @@ export default function CommentPage() {
       </div>
       <div className="w-full max-w-3xl mt-10 px-4 md:px-0">
         <button 
-        onClick={() => {
-          setShowPopup(true);
-          setEditId(null);
-          setNewComment("");
-          setNewRating(0);
-        }}
-        className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold text-base py-3 rounded-lg shadow-md transition hover:cursor-pointer">
-          Add a review
-        </button>
+  onClick={() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You need to log in to add a review.");
+      router.push("/login"); // Redirect to login page
+      return;
+    }
+    setShowPopup(true);
+    setEditId(null);
+    setNewComment("");
+    setNewRating(0);
+  }}
+  className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold text-base py-3 rounded-lg shadow-md transition hover:cursor-pointer"
+>
+  Add a review
+</button>
+
       </div>
       <div className="mb-10"></div>
       {/* 🧑‍ Our หมอนวด Title */}
