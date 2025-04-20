@@ -61,6 +61,7 @@ export default function Profile() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white pt-20 md:pt-16 mt-10 md:mt-0">
       <div className="bg-white rounded-lg p-8 w-full max-w-2xl mb-16 md:mb-0">
+      <div className="h-4 md:hidden"></div>
         <div className="flex items-center justify-center mb-6">
           <Image
             src="/image/antony.jpg"

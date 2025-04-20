@@ -131,6 +131,7 @@ export default function ReservationPage() {
   return (
     <div className="flex flex-col items-center p-10 w-full pt-20 md:pt-10 mb-16 md:mb-0">
       <div className="w-full max-w-4xl space-y-4 mt-15">
+      <div className="h-2 md:hidden"></div>
       {reservations.length > 0 ? (
         reservations.map((reservation) => (
           <ReservationItem

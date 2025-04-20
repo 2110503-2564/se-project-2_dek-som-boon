@@ -352,7 +352,7 @@ export default function CommentPage() {
   onClick={() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You need to log in to add a review.");
+      // alert("You need to log in to add a review.");
       router.push("/login"); // Redirect to login page
       return;
     }
