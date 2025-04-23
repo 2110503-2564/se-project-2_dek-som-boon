@@ -121,6 +121,17 @@ export default function CommentPage() {
     setComments(json.data);
   };
 
+  useEffect(() => {
+    if (showPopup || showDelete) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showPopup, showDelete]);
+
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
