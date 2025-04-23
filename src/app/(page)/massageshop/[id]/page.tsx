@@ -541,11 +541,37 @@ export default function CommentPage() {
                 <span className="font-semibold">Availability:</span> {t.availability}
               </div>
             </div>
+            {checkAdmin() && (
+            <div className="flex space-x-2 mt-2 justify-end">
+              <button
+                className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-blue-400 "
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-red-500"
+              >
+                Delete
+              </button>
+            </div>
+          )}
           </div>
         </div>
       </SwiperSlide>
     ))}
   </Swiper>
+  {checkAdmin() && (
+  <div className="flex justify-center mt-6">
+    <button
+      className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow"
+      onClick={() => {
+        // Open your add therapist modal or navigate
+      }}
+    >
+      Add Massage Therapist
+    </button>
+  </div>
+)}
 </div>
 
     {showPopup && (
