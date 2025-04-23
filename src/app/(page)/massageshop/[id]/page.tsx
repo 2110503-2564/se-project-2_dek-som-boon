@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 import React , { useRef } from "react";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import Image from "next/image";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface Comment {
   _id: string;
@@ -473,17 +474,18 @@ export default function CommentPage() {
   <button
     ref={prevRef}
     aria-label="Previous therapist"
-    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
+    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
   >
-    ←
+    <ArrowLeft className="w-4 h-4" />
   </button>
   <button
     ref={nextRef}
     aria-label="Next therapist"
-    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
+    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
   >
-    →
+    <ArrowRight className="w-4 h-4" />
   </button>
+
 
   <Swiper
     modules={[Navigation]}
