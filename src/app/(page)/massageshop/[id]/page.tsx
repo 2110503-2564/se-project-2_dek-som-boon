@@ -285,8 +285,15 @@ export default function CommentPage() {
                       style={{ width: `${percent}%` }}
                     />
                     {isHovered && (
-                      <div className="absolute left-full ml-2 px-2 bg-white border rounded shadow text-sm z-10 whitespace-nowrap">
-                        {count} / {comments.length}
+                      <div className="absolute left-full -top-3 ml-5 z-10">
+                        <div className="relative inline-block">
+                          {/* Triangle arrow on the left */}
+                          <div className="absolute -left-2 top-1/2 -translate-y-1 w-0 h-0 border-t-6 border-t-transparent border-b-6 border-b-transparent border-r-6 border-r-gray-300" />
+                          {/* Tooltip box */}
+                          <div className="bg-white border border-gray-300 rounded px-2 py-1 text-sm shadow text-center min-w-[40px]">
+                            {count}/{comments.length}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
