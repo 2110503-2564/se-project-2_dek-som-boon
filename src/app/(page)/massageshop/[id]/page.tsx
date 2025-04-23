@@ -474,14 +474,14 @@ export default function CommentPage() {
   <button
     ref={prevRef}
     aria-label="Previous therapist"
-    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
   >
     <ArrowLeft className="w-4 h-4" />
   </button>
   <button
     ref={nextRef}
     aria-label="Next therapist"
-    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
   >
     <ArrowRight className="w-4 h-4" />
   </button>
