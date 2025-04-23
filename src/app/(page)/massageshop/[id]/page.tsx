@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { useRef } from "react";
+import React , { useRef } from "react";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import Image from "next/image";
 
@@ -68,6 +68,44 @@ export default function CommentPage() {
   const [showDelete, setShowDelete] = useState<Boolean>(false);
   const [selecting2Delete, setSelecting2Delete] = useState<string | null>(null);
 
+  const therapists = [
+    {
+      name: "Joy",
+      tel: "xxx - xxx - xxxx",
+      age: 28,
+      sex: "female",
+      specialties: "foot",
+      availability: "Mon, Wed",
+      image: "/image/antony.jpg",
+    },
+    {
+      name: "Man",
+      tel: "xxx - xxx - xxxx",
+      age: 35,
+      sex: "male",
+      specialties: "back",
+      availability: "Tue, Fri",
+      image: "/image/antony.jpg",
+    },
+    {
+      name: "Suzie",
+      tel: "xxx - xxx - xxxx",
+      age: 50,
+      sex: "female",
+      specialties: "foot",
+      availability: "Sat, Sun",
+      image: "/image/antony.jpg",
+    },
+    {
+      name: "Alex",
+      tel: "xxx - xxx - xxxx",
+      age: 40,
+      sex: "male",
+      specialties: "shoulder",
+      availability: "Thu, Fri",
+      image: "/image/antony.jpg",
+    },
+  ];
   const fetchReviews = async () => {
     const res = await fetch(
       `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`,
@@ -368,70 +406,79 @@ export default function CommentPage() {
 >
   Add a review
 </button>
+    
 
-      </div>
-      <div className="mb-10"></div>
-      {/* 🧑‍ Our หมอนวด Title */}
-      {/* <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
-        Our หมอนวด
-      </h2> */}
+  </div>
+  <div className="mb-10"></div>
+    {/* 🧑‍ Our หมอนวด Title */}
+    <h2 className="text-2xl font-bold text-center mt-14 mb-6 text-gray-800 tracking-wide">
+  Massage Therapist
+</h2>
 
-      {/* 🌀 Swiper Carousel */}
-      {/* <div className="relative w-full max-w-3xl mx-auto mt-14"> */}
-      {/* Arrows */}
-      {/* <button
-        ref={prevRef}
-        className="absolute z-10 left-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
-      >
-        ←
-      </button>
-      <button
-        ref={nextRef}
-        className="absolute z-10 right-[-30px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
-      >
-        →
-      </button> */}
+<div className="relative w-full max-w-3xl mx-auto mt-8">
+  {/* Navigation Arrows */}
+  <button
+    ref={prevRef}
+    aria-label="Previous therapist"
+    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+  >
+    ←
+  </button>
+  <button
+    ref={nextRef}
+    aria-label="Next therapist"
+    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+  >
+    →
+  </button>
 
-      {/* <Swiper
-        modules={[Navigation]}
-        spaceBetween={24}
-        slidesPerView={3}
-        navigation={{
-          prevEl: prevRef.current!,
-          nextEl: nextRef.current!,
-        }}
-        onBeforeInit={(swiper) => {
-          // @ts-ignore
-          swiper.params.navigation.prevEl = prevRef.current;
-          // @ts-ignore
-          swiper.params.navigation.nextEl = nextRef.current;
-        }}
-        breakpoints={{
-          320: { slidesPerView: 1 },
-          640: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }}
-        loop
-      >
-        {[1, 2, 3, 4, 5].map((i) => (
-          <SwiperSlide key={i}>
-            <div className="w-[180px] bg-white border rounded-xl shadow-md px-4 py-6 text-center transition hover:shadow-lg mx-auto">
-              <img
-                src="/image/antony.jpg"
-                alt="Therapist"
-                className="w-20 h-20 mx-auto rounded-full object-cover mb-4 border-2 border-gray-300"
-              />
-              <h3 className="font-semibold text-base text-gray-800">Ant Man Uni</h3>
-              <ul className="text-sm mt-3 text-left list-disc ml-6 text-gray-600 leading-relaxed">
-                <li>ความเชี่ยวชาญ 1</li>
-                <li>ความเชี่ยวชาญ 2</li>
-                <li>ความเชี่ยวชาญ 3</li>
-              </ul>
+  <Swiper
+    modules={[Navigation]}
+    spaceBetween={24}
+    slidesPerView={3}
+    navigation={{
+      prevEl: prevRef.current!,
+      nextEl: nextRef.current!,
+    }}
+    onBeforeInit={(swiper) => {
+      // @ts-ignore
+      swiper.params.navigation.prevEl = prevRef.current;
+      // @ts-ignore
+      swiper.params.navigation.nextEl = nextRef.current;
+    }}
+    breakpoints={{
+      320: { slidesPerView: 1 },
+      640: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    }}
+    loop
+  >
+    {therapists.map((t, idx) => (
+      <SwiperSlide key={idx}>
+        <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[330px] flex flex-col items-center">
+          <img
+            src={t.image}
+            alt={t.name}
+            className="w-24 h-24 mx-auto rounded-full object-cover mb-4 border-2 border-gray-300"
+          />
+          <div className="text-left w-full mt-2">
+            <span className="block font-semibold text-lg mb-1">{t.name}</span>
+            <span className="block text-sm text-gray-700">Tel: {t.tel}</span>
+            <span className="block text-sm text-gray-700">Age: {t.age} | sex: {t.sex}</span>
+            <div className="mt-2 text-sm text-gray-700">
+              <div>
+                <span className="font-semibold">Specialties:</span> {t.specialties}
+              </div>
+              <div>
+                <span className="font-semibold">Availability:</span> {t.availability}
+              </div>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div> */}
+          </div>
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</div>
 
     {showPopup && (
   <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm backdrop-brightness-50">
