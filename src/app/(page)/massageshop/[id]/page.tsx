@@ -643,11 +643,15 @@ export default function CommentPage() {
 
     {/* delete pop up */}
     {showDelete && (
-      <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
-          <ConfirmPopup onClose={handleCloseDelete} onDelete={handleDelete} title={"Are you sure you want to delete this comment?"}/>
-          {/* <p>{selecting2Delete}</p> */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+        <ConfirmPopup
+          onClose={handleCloseDelete}
+          onDelete={handleDelete}
+          title={"Are you sure you want to delete this comment?"}
+        />
+        {/* <p>{selecting2Delete}</p> */}
       </div>
-      )}
+    )}
     </div>
   );
 }
