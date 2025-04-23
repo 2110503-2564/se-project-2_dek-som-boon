@@ -67,6 +67,11 @@ export default function CommentPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [showDelete, setShowDelete] = useState<Boolean>(false);
   const [selecting2Delete, setSelecting2Delete] = useState<string | null>(null);
+  const [hovered5, setHovered5] = useState(false);
+  const [hovered4, setHovered4] = useState(false);
+  const [hovered3, setHovered3] = useState(false);
+  const [hovered2, setHovered2] = useState(false);
+  const [hovered1, setHovered1] = useState(false);
 
   const therapists = [
     {
@@ -182,6 +187,24 @@ export default function CommentPage() {
     setEditId(c._id);
   };
 
+  const checkState = (score : number) => {
+    if (score === 5 ) setHovered5(true) ;
+    else if (score === 4) setHovered4(true) ;
+    else if (score === 3) setHovered3(true) ;
+    else if (score === 2) setHovered2(true) ;
+    else if (score === 1) setHovered1(true) ;
+    
+  }
+
+  const checkState2 = (score : number) => {
+    if (score === 5 ) setHovered5(false) ;
+    else if (score === 4) setHovered4(false) ;
+    else if (score === 3) setHovered3(false) ;
+    else if (score === 2) setHovered2(false) ;
+    else if (score === 1) setHovered1(false) ;
+    
+  }
+
   const handleShowDelete = (c: Comment) => {
     setShowDelete(true);
     setSelecting2Delete(c._id);
@@ -272,9 +295,6 @@ export default function CommentPage() {
             </div>
           </div>
         </div>
-
-
-
         {/* Review Summary */}
         <h2 className="font-semibold text-gray-800 text-lg">Review Summary</h2>
         <div className="grid md:grid-cols-2 gap-6 items-start">
@@ -282,22 +302,45 @@ export default function CommentPage() {
             {[5, 4, 3, 2, 1].map((score) => {
               const count = comments.filter((c) => c.score === score).length;
               const percent = (count / comments.length) * 100 || 0;
+              const isHovered =
+                (score === 5 && hovered5) ||
+                (score === 4 && hovered4) ||
+                (score === 3 && hovered3) ||
+                (score === 2 && hovered2) ||
+                (score === 1 && hovered1);
+
               return (
-                <div key={score} className="flex items-center space-x-2">
+                <div
+                  key={score}
+                  className="flex items-center space-x-2 relative"
+                  onMouseEnter={() => checkState(score)}
+                  onMouseLeave={() => checkState2(score)}
+                >
                   <span className="w-4">{score}</span>
-                  <div className="flex-1 bg-gray-200 h-2 rounded group"> 
+                  <div className="flex-1 bg-gray-200 h-2 rounded relative">
                     <div
                       className="h-2 bg-yellow-400 rounded"
-                      style={{ width: `${percent}%`  }}
+                      style={{ width: `${percent}%` }}
                     />
-                    <div className="relative opacity-0 group-hover:opacity-100 bottom-4 left-90">
-                        {count}
-                    </div>
+                    {isHovered && (
+                      <div className="absolute left-full -top-3 ml-5 z-10">
+                        <div className="relative inline-block">
+                          {/* Triangle arrow on the left */}
+                          <div className="absolute -left-2 top-1/2 -translate-y-1 w-0 h-0 border-t-6 border-t-transparent border-b-6 border-b-transparent border-r-6 border-r-gray-300" />
+                          {/* Tooltip box */}
+                          <div className="bg-white border border-gray-300 rounded px-2 py-1 text-sm shadow text-center min-w-[40px]">
+                            {count}/{comments.length}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
             })}
           </div>
+
+          {/* Average score display */}
           <div className="flex flex-col items-center justify-center">
             <span className="text-5xl font-bold text-yellow-500">
               {comments.length > 0
@@ -306,12 +349,22 @@ export default function CommentPage() {
             </span>
             <div className="flex mt-1">
               {[1, 2, 3, 4, 5].map((i) => (
-                <StarIcon key={i} style={{ color: i <= (comments.reduce((s, c) => s + c.score, 0) / comments.length || 0) ? "#facc15" : "#e5e7eb" }} />
+                <StarIcon
+                  key={i}
+                  style={{
+                    color:
+                      i <=
+                      (comments.reduce((s, c) => s + c.score, 0) / comments.length || 0)
+                        ? "#facc15"
+                        : "#e5e7eb",
+                  }}
+                />
               ))}
             </div>
             <span className="text-sm text-gray-500">{comments.length} Reviews</span>
           </div>
         </div>
+
 
         {/* User Review Section */}
         <div>
