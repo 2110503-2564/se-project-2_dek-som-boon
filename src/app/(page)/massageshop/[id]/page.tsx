@@ -247,11 +247,14 @@ export default function CommentPage() {
               return (
                 <div key={score} className="flex items-center space-x-2">
                   <span className="w-4">{score}</span>
-                  <div className="flex-1 bg-gray-200 h-2 rounded">
+                  <div className="flex-1 bg-gray-200 h-2 rounded group"> 
                     <div
                       className="h-2 bg-yellow-400 rounded"
-                      style={{ width: `${percent}%` }}
+                      style={{ width: `${percent}%`  }}
                     />
+                    <div className="relative opacity-0 group-hover:opacity-100 bottom-4 left-90">
+                        {count}
+                    </div>
                   </div>
                 </div>
               );
