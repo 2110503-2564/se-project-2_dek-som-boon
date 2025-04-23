@@ -468,19 +468,19 @@ export default function CommentPage() {
   Massage Therapist
 </h2>
 
-<div className="relative w-full max-w-3xl mx-auto mt-8">
+<div className="relative w-full max-w-3xl mx-auto mt-8 hover:cursor-pointer">
   {/* Navigation Arrows */}
   <button
     ref={prevRef}
     aria-label="Previous therapist"
-    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+    className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
   >
     ←
   </button>
   <button
     ref={nextRef}
     aria-label="Next therapist"
-    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+    className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300 hover:cursor-pointer"
   >
     →
   </button>
@@ -508,7 +508,7 @@ export default function CommentPage() {
   >
     {therapists.map((t, idx) => (
       <SwiperSlide key={idx}>
-        <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[330px] flex flex-col items-center">
+        <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[330px] flex flex-col items-center border-gray-300">
           <img
             src={t.image}
             alt={t.name}
