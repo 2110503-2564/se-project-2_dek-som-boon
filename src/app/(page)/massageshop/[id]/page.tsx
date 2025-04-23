@@ -206,6 +206,19 @@ export default function CommentPage() {
     
   }
 
+  const checkAdmin = (): boolean => {
+    try {
+        const userString = localStorage.getItem("user");
+        if (userString) {
+        const user = JSON.parse(userString);
+        return user.role === "admin";
+        }
+    } catch (error) {
+        console.error("Error parsing user data:", error);
+    }
+    return false;
+    };
+
   const handleShowDelete = (c: Comment) => {
     setShowDelete(true);
     setSelecting2Delete(c._id);
