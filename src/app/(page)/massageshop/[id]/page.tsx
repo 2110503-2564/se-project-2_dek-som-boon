@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import React , { useRef } from "react";
 import ConfirmPopup from "@/components/ConfirmPopup";
+import AddMassageTherapistPopup from "@/components/AddMassageTherapistPopup";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -66,6 +67,7 @@ export default function CommentPage() {
   const nextRef = useRef(null);
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showAddTherapist, setShowAddTherapist] = useState(false);
   const [showDelete, setShowDelete] = useState<Boolean>(false);
   const [selecting2Delete, setSelecting2Delete] = useState<string | null>(null);
   const [hovered5, setHovered5] = useState(false);
@@ -576,7 +578,7 @@ export default function CommentPage() {
     <button
       className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow"
       onClick={() => {
-        // Open your add therapist modal or navigate
+        setShowAddTherapist(true)
       }}
     >
       Add Massage Therapist
@@ -652,6 +654,16 @@ export default function CommentPage() {
         {/* <p>{selecting2Delete}</p> */}
       </div>
     )}
+    {showAddTherapist &&
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+      <ConfirmPopup
+        onClose={handleCloseDelete}
+        onDelete={handleDelete}
+        title={"Are you sure you want to delete this comment?"}
+      />
+      {/* <p>{selecting2Delete}</p> */}
+    </div>
+    }
     </div>
   );
 }
