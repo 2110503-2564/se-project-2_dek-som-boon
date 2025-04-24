@@ -2,7 +2,7 @@ export default async function addMassageTherapist(
     token: string, 
     name: string, 
     tel: string,
-    age: number,
+    birthdate: string,
     sex: string, 
     specialties: string,
     availability: string
@@ -17,7 +17,7 @@ export default async function addMassageTherapist(
             body: JSON.stringify({
                 name: name,
                 tel:tel,
-                age:age,
+                birthdate:birthdate,
                 sex:sex,
                 specialties: specialties,
                 availability: availability
