@@ -14,6 +14,7 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getTherapists } from "@/libs/getTherapists";
 import { Therapist } from "../../../../../interface";
+import addMassageTherapist from "@/libs/addMassageTherapist";
 interface Comment {
   _id: string;
   user: {
@@ -234,6 +235,33 @@ export default function CommentPage() {
     setShowDelete(false);
     setSelecting2Delete(null);
 };
+
+  const handleCloseAddTherapist = () => {
+    setShowAddTherapist(false)
+  }
+
+const handleAddTherapist = async (
+      name: string, 
+      tel: string,
+      birthdate: string,
+      sex: string, 
+      specialties: string[],
+      availability: string
+    ) => {
+        try {
+            const token = localStorage.getItem("token");
+            if(token){
+                const data = await addMassageTherapist(token, name, tel, birthdate, sex, specialties, availability);
+                if(data){
+                    alert("Therapist added successful!");
+                    handleCloseAddTherapist;
+                    // fetchShops()
+                }
+            }
+        } catch (error) {
+            console.error("Error to add therapist:", error);
+        }
+    };
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[180px] md:pt-[140px] pb-[100px] px-4 md:px-10">
@@ -523,7 +551,7 @@ export default function CommentPage() {
           <div className="text-left w-full mt-2">
             <span className="block font-semibold text-lg mb-1">{t.name}</span>
             <span className="block text-sm text-gray-700">Tel: {t.tel}</span>
-            <span className="block text-sm text-gray-700">Age: {t.age} | gender: {t.gender}</span>
+            <span className="block text-sm text-gray-700">Age: {t.age} | gender: {t.sex}</span>
             <div className="mt-2 text-sm text-gray-700">
             <div>
             <span className="font-semibold">Specialties:</span>
@@ -644,10 +672,9 @@ export default function CommentPage() {
     )}
     {showAddTherapist &&
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
-      <ConfirmPopup
-        onClose={handleCloseDelete}
-        onDelete={handleDelete}
-        title={"Are you sure you want to delete this comment?"}
+      <AddMassageTherapistPopup
+        onClose={handleCloseAddTherapist}
+        onAdd={handleAddTherapist}
       />
       {/* <p>{selecting2Delete}</p> */}
     </div>

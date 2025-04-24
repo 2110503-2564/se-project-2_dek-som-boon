@@ -56,7 +56,7 @@ export default function ShopItem({
                 ({shop.reviewerCount})
               </span>
             </div>
-            <p className="text-gray-500 mt-1">Address:{shop.address}</p>
+            <p className="text-gray-500 mt-1">Address: {shop.address}</p>
             <p className="text-gray-500">Tel: {shop.tel}</p>
             <p className="text-gray-500">
               Open: {shop.openTime} - {shop.closeTime}

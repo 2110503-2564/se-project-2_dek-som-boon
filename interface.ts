@@ -55,7 +55,7 @@ export interface Therapist{
   name:string,
   tel:string,
   age:string,
-  gender:string,
+  sex:string,
   specialty:string[],
   available:string[],
   massageShop:MassageItem

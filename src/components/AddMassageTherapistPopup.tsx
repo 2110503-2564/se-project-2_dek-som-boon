@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import DateReserve from "./DateReserve";
 
 export default function AddMassageTherapistPopup({
   onClose,
@@ -17,7 +18,7 @@ export default function AddMassageTherapistPopup({
     name: string,
     tel: string,
     birthdate: string,
-    gender: string,
+    sex: string,
     specialties: string[],
     availability: string
   ) => void;
@@ -26,8 +27,8 @@ export default function AddMassageTherapistPopup({
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
   const [birthdate, setBirthdate] = useState<Dayjs | null>(dayjs());
-  const [gender, setGender] = useState("Male");
-  const [availability, setAvailability] = useState("");
+  const [sex, setSex] = useState("Male");
+  const [availability, setAvailability] = useState<string>("");
   const [specialties, setSpecialties] = useState<string[]>([]);
 
   const handleSpecialtyChange = (specialty: string) => {
@@ -54,7 +55,7 @@ export default function AddMassageTherapistPopup({
       name,
       tel,
       birthdate.format("YYYY-MM-DD"),
-      gender,
+      sex,
       specialties,
       availability
     );
@@ -90,7 +91,7 @@ export default function AddMassageTherapistPopup({
 
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2">Birthdate</label>
-          <DesktopDatePicker
+          {/* <DesktopDatePicker
             format="MM/DD/YYYY"
             value={birthdate}
             onChange={(date: Dayjs | null) => setBirthdate(date)}
@@ -99,16 +100,17 @@ export default function AddMassageTherapistPopup({
                 fullWidth: true,
                 },
             }}
-            />
+            /> */}
+            <DateReserve selectedDate={birthdate} setSelectedDate={setBirthdate} />
 
         </div>
 
         <div className="mb-4">
-          <label className="block text-lg font-semibold mb-2">Gender</label>
+          <label className="block text-lg font-semibold mb-2">sex</label>
           <select
             className="w-full rounded-lg p-3 bg-gray-100 text-gray-700"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            value={sex}
+            onChange={(e) => setSex(e.target.value)}
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>

@@ -4,11 +4,11 @@ export default async function addMassageTherapist(
     tel: string,
     birthdate: string,
     sex: string, 
-    specialties: string,
+    specialties: string[],
     availability: string
 ) {
     try {
-        const response = await fetch("https://antony-massage-backend-production.up.railway.app/api/v1/therapist", {
+        const response = await fetch("https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/$%7BmassageShopId%7D/therapists", {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
