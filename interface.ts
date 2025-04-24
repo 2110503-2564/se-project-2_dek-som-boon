@@ -50,3 +50,14 @@ export interface ReviewJson {
   data: Review | Review[];
 }
 
+export interface Therapist{
+  _id: string,
+  name:string,
+  tel:string,
+  age:string,
+  gender:string,
+  specialty:string[],
+  available:string[],
+  massageShop:MassageItem
+}
+

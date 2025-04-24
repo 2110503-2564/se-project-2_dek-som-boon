@@ -12,7 +12,8 @@ import ConfirmPopup from "@/components/ConfirmPopup";
 import AddMassageTherapistPopup from "@/components/AddMassageTherapistPopup";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-
+import { getTherapists } from "@/libs/getTherapists";
+import { Therapist } from "../../../../../interface";
 interface Comment {
   _id: string;
   user: {
@@ -75,45 +76,23 @@ export default function CommentPage() {
   const [hovered3, setHovered3] = useState(false);
   const [hovered2, setHovered2] = useState(false);
   const [hovered1, setHovered1] = useState(false);
+  const [therapists, setTherapists] = useState<Therapist[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const therapists = [
-    {
-      name: "Joy",
-      tel: "xxx - xxx - xxxx",
-      age: 28,
-      sex: "female",
-      specialties: "foot",
-      availability: "Mon, Wed",
-      image: "/image/antony.jpg",
-    },
-    {
-      name: "Man",
-      tel: "xxx - xxx - xxxx",
-      age: 35,
-      sex: "male",
-      specialties: "back",
-      availability: "Tue, Fri",
-      image: "/image/antony.jpg",
-    },
-    {
-      name: "Suzie",
-      tel: "xxx - xxx - xxxx",
-      age: 50,
-      sex: "female",
-      specialties: "foot",
-      availability: "Sat, Sun",
-      image: "/image/antony.jpg",
-    },
-    {
-      name: "Alex",
-      tel: "xxx - xxx - xxxx",
-      age: 40,
-      sex: "male",
-      specialties: "shoulder",
-      availability: "Thu, Fri",
-      image: "/image/antony.jpg",
-    },
-  ];
+  useEffect(() => {
+    const fetchTherapists = async () => {
+      try {
+        const data = await getTherapists(id as string);
+        setTherapists(data);
+      } catch (err) {
+        console.error("Failed to fetch therapists", err);
+      }
+    };
+
+    fetchTherapists();
+  }, [id]);
+
+
   const fetchReviews = async () => {
     const res = await fetch(
       `https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${id}/reviews`,
@@ -219,18 +198,17 @@ export default function CommentPage() {
     
   }
 
-  const checkAdmin = (): boolean => {
-    try {
-        const userString = localStorage.getItem("user");
-        if (userString) {
-        const user = JSON.parse(userString);
-        return user.role === "admin";
-        }
-    } catch (error) {
-        console.error("Error parsing user data:", error);
+  useEffect(() => {
+  try {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      const user = JSON.parse(userString);
+      setIsAdmin(user.role === "admin");
     }
-    return false;
-    };
+  } catch (err) {
+    console.error("Error parsing user data:", err);
+  }
+}, []);
 
   const handleShowDelete = (c: Comment) => {
     setShowDelete(true);
@@ -537,24 +515,34 @@ export default function CommentPage() {
     {therapists.map((t, idx) => (
       <SwiperSlide key={idx}>
         <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[330px] flex flex-col items-center border-gray-300">
-          <img
-            src={t.image}
-            alt={t.name}
-            className="w-24 h-24 mx-auto rounded-full object-cover mb-4 border-2 border-gray-300"
-          />
+        <img
+        src="/image/antony.jpg"
+        alt={t.name}
+        className="w-24 h-24 mx-auto rounded-full object-cover mb-4 border-2 border-gray-300"
+        />
           <div className="text-left w-full mt-2">
             <span className="block font-semibold text-lg mb-1">{t.name}</span>
             <span className="block text-sm text-gray-700">Tel: {t.tel}</span>
-            <span className="block text-sm text-gray-700">Age: {t.age} | sex: {t.sex}</span>
+            <span className="block text-sm text-gray-700">Age: {t.age} | gender: {t.gender}</span>
             <div className="mt-2 text-sm text-gray-700">
-              <div>
-                <span className="font-semibold">Specialties:</span> {t.specialties}
-              </div>
-              <div>
-                <span className="font-semibold">Availability:</span> {t.availability}
-              </div>
+            <div>
+            <span className="font-semibold">Specialties:</span>
+            <ul className="list-disc list-inside ml-2">
+              {t.specialty.map((s: string, i: number) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-1">
+            <span className="font-semibold">Availability:</span>
+            <ul className="list-disc list-inside ml-2">
+              {t.available.map((a: string, i: number) => (
+                <li key={i}>{a}</li>
+              ))}
+            </ul>
+          </div>
             </div>
-            {checkAdmin() && (
+            {isAdmin && (
             <div className="flex space-x-2 mt-2 justify-end">
               <button
                 className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-blue-400 "
@@ -573,7 +561,7 @@ export default function CommentPage() {
       </SwiperSlide>
     ))}
   </Swiper>
-  {checkAdmin() && (
+  {isAdmin && (
   <div className="flex justify-center mt-6">
     <button
       className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow"
