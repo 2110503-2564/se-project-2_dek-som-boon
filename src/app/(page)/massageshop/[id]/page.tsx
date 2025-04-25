@@ -13,59 +13,20 @@ import AddMassageTherapistPopup from "@/components/AddMassageTherapistPopup";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getTherapists } from "@/libs/getTherapists";
-import { Therapist } from "../../../../../interface";
+import { Therapist,User,MassageItem,Review } from "../../../../../interface";
 import addMassageTherapist from "@/libs/addMassageTherapist";
-interface Comment {
-  _id: string;
-  user: {
-    _id: string;
-    name: string;
-    username: string;
-  };
-  comment: string;
-  score: number;
-}
-
-interface User {
-  _id: string;
-  name: string;
-  username: string;
-  role: string;
-}
-
-interface Shop {
-  _id: string;
-  name: string;
-  address: string;
-  openTime: string;
-  closeTime: string;
-  tel: string;
-  image?: string;
-}
-
-async function getUserProfile(token: string): Promise<User> {
-  const res = await fetch(
-    "https://antony-massage-backend-production.up.railway.app/api/v1/auth/me",
-    {
-      method: "GET",
-      headers: { authorization: `Bearer ${token}` },
-    }
-  );
-  if (!res.ok) throw new Error("Cannot get user profile");
-  const json = await res.json();
-  return json.data;
-}
+import getUserProfile from "@/libs/getUserProfile";
 
 export default function CommentPage() {
   const { id } = useParams(); // massageShopId
   const router = useRouter(); // Initialize the router
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<Review[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
   const [editId, setEditId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [shop, setShop] = useState<Shop | null>(null);
+  const [shop, setShop] = useState<MassageItem | null>(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [showOnlyMine, setShowOnlyMine] = useState(false);
@@ -106,7 +67,7 @@ export default function CommentPage() {
     setComments(json.data);
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (showPopup || showDelete) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -115,14 +76,14 @@ export default function CommentPage() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [showPopup, showDelete]);
+  }, [showPopup, showDelete]);*/
 
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
       const prof = await getUserProfile(token);
-      setUser(prof);
+      setUser(prof.data);
     } catch (err) {
       console.error(err);
     }
@@ -150,8 +111,8 @@ export default function CommentPage() {
   };
 
   const handleSubmit = async () => {
-    if (!newComment || newRating === 0) {
-      return alert("Please fill out all fields.");
+    if (newRating === 0) {
+      return alert("Please fill out rating and comment.");
     }
     const payload = { comment: newComment, score: newRating };
     const url = editId
@@ -177,7 +138,7 @@ export default function CommentPage() {
     }
   };
 
-  const handleEdit = (c: Comment) => {
+  const handleEdit = (c: Review) => {
     setShowPopup(true);
     setNewComment(c.comment);
     setNewRating(c.score);
@@ -214,13 +175,12 @@ export default function CommentPage() {
   }
 }, []);
 
-  const handleShowDelete = (c: Comment) => {
+  const handleShowDelete = (c: Review) => {
     setShowDelete(true);
     setSelecting2Delete(c._id);
 }
 
   const handleDelete = async () => {
-    // if (!confirm("Delete this comment?")) return;
     const res = await fetch(
       `https://antony-massage-backend-production.up.railway.app/api/v1/reviews/${selecting2Delete}`,
       {
@@ -371,7 +331,7 @@ export default function CommentPage() {
           {/* 🖼 Image */}
           <div className="flex justify-center">
             <Image
-              src={shop?.image || "/image/massageshop.jpg"}
+              src={"/image/massageshop.jpg"}
               alt="Shop"
               className="w-full h-48 object-cover rounded-xl"
               width="1920"

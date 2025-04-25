@@ -31,15 +31,14 @@ export default async function addMassageTherapist(
         });
         
         // Get response text for better error handling
-        const resText = await response.text();
+        const resjson = await response.json();
         if (!response.ok) {
-            throw new Error(`Error: ${response.status} - ${response.statusText} - ${resText}`);
+            throw new Error(resjson.error);
         }
         
-        console.log('Therapist created successfully:', resText);
-        return JSON.parse(resText);
+        console.log('Therapist created successfully:', resjson);
+        return resjson;
     } catch (error) {
-        console.error('Failed to create therapist:', error);
-        throw error;
+        alert(error);
     }
 }
