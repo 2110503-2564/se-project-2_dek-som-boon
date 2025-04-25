@@ -287,35 +287,57 @@ export default function CommentPage() {
   };
   
 
-
   const handleCloseDeleteTharapist = () => {
     setShowDeleteTherapist(false);
     setSelecting2DeleteTherapist(null);
   }
 
-
-const handleAddTherapist = async (
-      name: string, 
-      tel: string,
-      birthdate: string,
-      sex: string, 
-      specialties: string[],
-      availability: string
-    ) => {
-        try {
-            const token = localStorage.getItem("token");
-            if(token){
-                const data = await addMassageTherapist(token, name, tel, birthdate, sex, specialties, availability);
-                if(data){
-                    alert("Therapist added successful!");
-                    handleCloseAddTherapist;
-                    // fetchShops()
-                }
-            }
-        } catch (error) {
-            console.error("Error to add therapist:", error);
-        }
-    };
+  const handleAddTherapist = async (
+    name: string, 
+    tel: string,
+    birthdate: string,
+    sex: string, 
+    specialties: string[],
+    availability: string[],
+  ) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You need to log in to add a therapist");
+        router.push("/login");
+        return;
+      }
+      
+      const shopId = id as string;
+      
+      // First close the popup to improve UX
+      setShowAddTherapist(false);
+      
+      const data = await addMassageTherapist(token, name, tel, birthdate, sex, specialties, availability, shopId);
+      if (data) {
+        // Force a refresh of therapists
+        setTherapists([]); // Clear current list to force re-render
+        
+        // Fetch updated therapists with small delay to ensure backend has updated
+        setTimeout(async () => {
+          try {
+            console.log("Refreshing therapist list...");
+            const updatedTherapists = await getTherapists(shopId);
+            console.log("Updated therapists:", updatedTherapists);
+            setTherapists(updatedTherapists);
+            alert("Therapist added successfully!");
+          } catch (refreshError) {
+            console.error("Error refreshing therapist list:", refreshError);
+            // Even if refresh fails, show success because the therapist was added
+            alert("Therapist added successfully! Please refresh to see updates.");
+          }
+        }, 500); // Small delay to ensure backend has updated
+      }
+    } catch (error: any) {
+      console.error("Error adding therapist:", error);
+      alert(`Failed to add therapist: ${error.message || "Unknown error"}`);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-white pt-[180px] md:pt-[140px] pb-[100px] px-4 md:px-10">
@@ -737,7 +759,6 @@ const handleAddTherapist = async (
     {showDeleteTherapist && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
           <ConfirmPopup onClose={handleCloseDeleteTharapist} onDelete={handleDeleteTherapist} title={"Are you sure you want to delete this Massage Therapist?"}/>
-          {/* <p>{selecting2Delete}</p> */}
       </div>
       )}
     </div>

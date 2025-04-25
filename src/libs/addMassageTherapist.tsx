@@ -5,10 +5,16 @@ export default async function addMassageTherapist(
     birthdate: string,
     sex: string, 
     specialties: string[],
-    availability: string
+    availability: string[],
+    shopID: string
 ) {
     try {
-        const response = await fetch("https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/$%7BmassageShopId%7D/therapists", {
+        // Log data for debugging
+        console.log('Adding therapist with data:', {
+            name, tel, birthDate: birthdate, sex, specialty: specialties, available: availability
+        });
+        
+        const response = await fetch(`https://antony-massage-backend-production.up.railway.app/api/v1/massage-shops/${shopID}/therapists`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -16,21 +22,24 @@ export default async function addMassageTherapist(
             },
             body: JSON.stringify({
                 name: name,
-                tel:tel,
-                birthdate:birthdate,
-                sex:sex,
-                specialties: specialties,
-                availability: availability
+                tel: tel,
+                birthDate: birthdate, // Make sure the D is capitalized
+                sex: sex.toLowerCase(), // Ensure lowercase
+                specialty: specialties, // API expects 'specialty' not 'specialties'
+                available: availability // API expects 'available' not 'availability'
             }),
         });
+        
+        // Get response text for better error handling
         const resText = await response.text();
         if (!response.ok) {
-            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            throw new Error(`Error: ${response.status} - ${response.statusText} - ${resText}`);
         }
-        console.log('Shop created successfully');
+        
+        console.log('Therapist created successfully:', resText);
         return JSON.parse(resText);
     } catch (error) {
-        console.error('Failed to create shop:', error);
+        console.error('Failed to create therapist:', error);
         throw error;
     }
 }
