@@ -34,6 +34,7 @@ interface User {
 }
 
 interface Shop {
+  _id: string;
   name: string;
   address: string;
   openTime: string;
@@ -71,6 +72,8 @@ export default function CommentPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [showAddTherapist, setShowAddTherapist] = useState(false);
   const [showDelete, setShowDelete] = useState<Boolean>(false);
+  const [showDeleteTherapist, setShowDeleteTherapist] = useState<Boolean>(false);
+  const [selecting2DeleteTherapist, setSelecting2DeleteTherapist] = useState<string | null>(null);
   const [selecting2Delete, setSelecting2Delete] = useState<string | null>(null);
   const [hovered5, setHovered5] = useState(false);
   const [hovered4, setHovered4] = useState(false);
@@ -239,6 +242,57 @@ export default function CommentPage() {
   const handleCloseAddTherapist = () => {
     setShowAddTherapist(false)
   }
+
+  const handleShowDeleteTharapist = (t : Therapist) => {
+    setShowDeleteTherapist(true);
+    setSelecting2DeleteTherapist(t._id)
+  }
+
+  const handleDeleteTherapist = async () => {
+    const therapistId = selecting2DeleteTherapist;
+    
+    try {
+      if (!therapistId) {
+        throw new Error('Missing therapist ID');
+      }
+  
+      // Use the correct endpoint as defined in the backend
+      const url = `https://antony-massage-backend-production.up.railway.app/api/v1/therapists/${therapistId}`;
+  
+      console.log('Attempting to delete therapist:', therapistId); // Debug log
+  
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: { 
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      const data = await res.json(); // The backend always returns JSON
+  
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to delete therapist');
+      }
+  
+      // If successful, update the UI
+      setShowDeleteTherapist(false);
+      setSelecting2DeleteTherapist(null);
+      setComments((prev) => prev.filter((t) => t._id !== therapistId));
+  
+    } catch (error) {
+      console.error('Delete therapist error:', error);
+      alert(error || "Failed to delete. Please try again later.");
+    }
+  };
+  
+
+
+  const handleCloseDeleteTharapist = () => {
+    setShowDeleteTherapist(false);
+    setSelecting2DeleteTherapist(null);
+  }
+
 
 const handleAddTherapist = async (
       name: string, 
@@ -578,6 +632,7 @@ const handleAddTherapist = async (
                 Edit
               </button>
               <button
+                onClick={ () => handleShowDeleteTharapist(t)}
                 className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-red-500"
               >
                 Delete
@@ -679,6 +734,12 @@ const handleAddTherapist = async (
       {/* <p>{selecting2Delete}</p> */}
     </div>
     }
+    {showDeleteTherapist && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+          <ConfirmPopup onClose={handleCloseDeleteTharapist} onDelete={handleDeleteTherapist} title={"Are you sure you want to delete this Massage Therapist?"}/>
+          {/* <p>{selecting2Delete}</p> */}
+      </div>
+      )}
     </div>
   );
 }
