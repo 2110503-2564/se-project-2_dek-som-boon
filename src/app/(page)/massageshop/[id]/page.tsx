@@ -8,6 +8,7 @@ import addMassageTherapist from "@/libs/addMassageTherapist";
 import getUserProfile from "@/libs/getUserProfile";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import AddMassageTherapistPopup from "@/components/AddMassageTherapistPopup";
+import EditMassageTherapistPopup from "@/components/EditMassageTherapistPopup";
 
 // New components
 import ShopHeader from "@/components/massageShop/ShopHeader";
@@ -16,6 +17,7 @@ import ReviewSummary from "@/components/massageShop/ReviewSummary";
 import ReviewsList from "@/components/massageShop/ReviewsList";
 import TherapistList from "@/components/massageShop/TherapistList";
 import ReviewPopup from "@/components/massageShop/ReviewPopup";
+import dayjs from "dayjs";
 
 export default function MassageShopPage() {
   const { id } = useParams(); // massageShopId
@@ -40,6 +42,13 @@ export default function MassageShopPage() {
   const [showAddTherapist, setShowAddTherapist] = useState(false);
   const [showDeleteTherapist, setShowDeleteTherapist] = useState(false);
   const [selecting2DeleteTherapist, setSelecting2DeleteTherapist] = useState<string | null>(null);
+  const [editingTherapistName, setEditingTherapistName] = useState<string>("");
+  const [editingTherapistTel, setEditingTherapistTel] = useState<string>("");
+  const [editingTherapistBirthdate, setEditingTherapistBirthdate] = useState<string>("");
+  const [editingTherapistSex, setEditingTherapistSex] = useState<string>("");
+  const [editingTherapistSpecialties, setEditingTherapistSpecialties] = useState<string[]>([]);
+  const [editingTherapistAvailability, setEditingTherapistAvailability] = useState<string[]>([]);
+  const [showEditTherapistPopup, setShowEditTherapistPopup] = useState<boolean>(false);
 
   // Fetch data
   useEffect(() => {
@@ -238,6 +247,35 @@ export default function MassageShopPage() {
     }
   };
 
+  const handleShowEditTherapist = (name:string, tel:string, birthdate:string, sex:string, specialties:string[], availability:string[]) => {
+    setShowEditTherapistPopup(true);
+    setEditingTherapistName(name);
+    setEditingTherapistTel(tel);
+    setEditingTherapistBirthdate(birthdate);
+    setEditingTherapistSex(sex);
+    setEditingTherapistSpecialties(specialties);
+    setEditingTherapistAvailability(availability);
+  }
+
+  const handleCloseEditTherapist = () => {
+    setShowEditTherapistPopup(false);
+    setEditingTherapistName("");
+    setEditingTherapistTel("");
+    setEditingTherapistBirthdate("");
+    setEditingTherapistSex("");
+    setEditingTherapistSpecialties([]);
+    setEditingTherapistAvailability([]);
+  }
+
+  const handleUpdateTherapist = async () => {
+    try{
+
+    }
+    catch(err) {
+      console.error("Error updating Therapist: ", err);
+    }
+  }
+
   const handleDeleteTherapist = async () => {
     try {
       if (!selecting2DeleteTherapist) {
@@ -297,6 +335,7 @@ export default function MassageShopPage() {
         therapists={therapists}
         isAdmin={isAdmin}
         onAddTherapist={() => setShowAddTherapist(true)}
+        onEditTherapist={handleShowEditTherapist}
         onDeleteTherapist={handleShowDeleteTherapist}
       />
 
@@ -335,6 +374,22 @@ export default function MassageShopPage() {
           <AddMassageTherapistPopup
             onClose={() => setShowAddTherapist(false)}
             onAdd={handleAddTherapist}
+          />
+        </div>
+      )}
+
+    {/* Edit Therapist popup */}
+    {showEditTherapistPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+          <EditMassageTherapistPopup
+            nameval = {editingTherapistName}
+            telval = {editingTherapistTel}
+            birthdateval = {dayjs(editingTherapistBirthdate)}
+            sexval = {editingTherapistSex}
+            specialtiesval = {editingTherapistSpecialties}
+            availabilityval = {editingTherapistAvailability}
+            onClose={handleCloseEditTherapist}
+            onUpdate={handleUpdateTherapist}
           />
         </div>
       )}

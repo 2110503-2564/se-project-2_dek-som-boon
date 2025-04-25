@@ -37,13 +37,12 @@ export interface ReserveItem {
 
 export interface Review {
   _id: string;
-  user: {
-    _id: string;
-    name: string;
-    username: string;
-  };
+  title: string;
   comment: string;
   score: number;
+  user: string;
+  massageShop: string;
+  createdAt: string;
 }
 
 export interface ReviewJson {
@@ -56,9 +55,10 @@ export interface Therapist{
   name:string,
   tel:string,
   age:string,
+  birthDate:string,
   sex:string,
   specialty:string[],
   available:string[],
-  massageShop:MassageItem
+  massageShopId:string
 }
 
