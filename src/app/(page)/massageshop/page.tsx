@@ -130,14 +130,14 @@ export default function massageShopPage() {
                 
                 
                 {showDelete && (
-                <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+                <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-40">
                     <ConfirmPopup onClose={handleCloseDelete} onDelete={handleDelete} title={"Are you sure you want to delete this shop?"}/>
                     {/* <p>{selecting2Delete}</p> */}
                 </div>
                 )}
 
                 {showAddShop && (
-                <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+                <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-40">
                     {/* <ConfirmPopup onClose={handleCloseDelete} onDelete={handleDelete} title={"Are you sure you want to delete this shop?"}/> */}
                     {/* <p>{selecting2Delete}</p> */}
                     <CreateShopPopup onClose={handleCloseAdd} onCreate={handleAdd}/>
