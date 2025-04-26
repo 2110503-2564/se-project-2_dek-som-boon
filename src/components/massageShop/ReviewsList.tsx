@@ -14,9 +14,13 @@ export default function ReviewsList({
 }: ReviewsListProps) {
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   
-  const canEditOrDelete = (commentUserId: string) => {
+  const canEdit = (commentUserId: string) => {
     if (!user) return false;
-    return user._id === commentUserId || user.role === "admin";
+    return user._id === commentUserId;
+  };
+  const canDelete = (commentUserId: string) => {
+    if (!user) return false;
+    return user._id === commentUserId ||user.role==="admin";
   };
 
   return (
@@ -60,7 +64,7 @@ export default function ReviewsList({
                   ))}
                 </div>
                 
-                {canEditOrDelete(c.user._id) && (
+                {canEdit(c.user._id) && (
                   <>
                     <button
                       onClick={() => onEditReview(c)}
@@ -68,6 +72,10 @@ export default function ReviewsList({
                     >
                       Edit
                     </button>
+                  </>
+                )}
+                {canDelete(c.user._id) && (
+                  <>
                     <button
                       onClick={() => onShowDelete(c)}
                       className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-md hover:bg-red-500 hover:cursor-pointer"

@@ -46,7 +46,7 @@ export default function AddMassageTherapistPopup({
   }, [router]);
 
   const handleSubmit = () => {
-    if (!name || !tel || !birthdate || availability.length === 0) {
+    if (!name || !tel || !birthdate || availability.length === 0||specialties.length===0) {
       alert("Please fill in all required fields.");
       return;
     }

@@ -129,7 +129,7 @@ export default function MassageShopPage() {
 
   const handleSubmitReview = async () => {
     if (newRating === 0) {
-      return alert("Please fill out rating and comment.");
+      return alert("Please fill out rating.");
     }
     
     const payload = { comment: newComment, score: newRating };
