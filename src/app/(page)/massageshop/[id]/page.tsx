@@ -18,6 +18,7 @@ import ReviewsList from "@/components/massageShop/ReviewsList";
 import TherapistList from "@/components/massageShop/TherapistList";
 import ReviewPopup from "@/components/massageShop/ReviewPopup";
 import dayjs from "dayjs";
+import updateMassageTherapist from "@/libs/updateMassageTherapist";
 
 export default function MassageShopPage() {
   const { id } = useParams(); // massageShopId
@@ -48,6 +49,7 @@ export default function MassageShopPage() {
   const [editingTherapistSex, setEditingTherapistSex] = useState<string>("");
   const [editingTherapistSpecialties, setEditingTherapistSpecialties] = useState<string[]>([]);
   const [editingTherapistAvailability, setEditingTherapistAvailability] = useState<string[]>([]);
+  const [editingTherapistId, setEditingTherapistId] = useState<string>("");
   const [showEditTherapistPopup, setShowEditTherapistPopup] = useState<boolean>(false);
 
   // Fetch data
@@ -232,9 +234,9 @@ export default function MassageShopPage() {
         setTherapists([]);
         setTimeout(async () => {
           try {
+            alert("Therapist added successfully!");
             const updatedTherapists = await getTherapists(shopId);
             setTherapists(updatedTherapists);
-            alert("Therapist added successfully!");
           } catch (refreshError) {
             console.error("Error refreshing therapist list:", refreshError);
             alert("Therapist added successfully! Please refresh to see updates.");
@@ -247,7 +249,7 @@ export default function MassageShopPage() {
     }
   };
 
-  const handleShowEditTherapist = (name:string, tel:string, birthdate:string, sex:string, specialties:string[], availability:string[]) => {
+  const handleShowEditTherapist = (name:string, tel:string, birthdate:string, sex:string, specialties:string[], availability:string[], therapistId:string) => {
     setShowEditTherapistPopup(true);
     setEditingTherapistName(name);
     setEditingTherapistTel(tel);
@@ -255,6 +257,7 @@ export default function MassageShopPage() {
     setEditingTherapistSex(sex);
     setEditingTherapistSpecialties(specialties);
     setEditingTherapistAvailability(availability);
+    setEditingTherapistId(therapistId);
   }
 
   const handleCloseEditTherapist = () => {
@@ -265,11 +268,44 @@ export default function MassageShopPage() {
     setEditingTherapistSex("");
     setEditingTherapistSpecialties([]);
     setEditingTherapistAvailability([]);
+    setEditingTherapistId("");
   }
 
-  const handleUpdateTherapist = async () => {
+  const handleUpdateTherapist = async (
+    name: string, 
+    tel: string,
+    birthdate: string,
+    sex: string, 
+    specialties: string[],
+    availability: string[],
+    therapistId: string
+  ) => {
     try{
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You need to log in to add a therapist");
+        router.push("/login");
+        return;
+      }
+      const shopId = id as string;
+      setShowEditTherapistPopup(false);
 
+      const data = await updateMassageTherapist(token, name, tel, birthdate, sex, specialties, availability, therapistId);
+
+      if (data) {
+        // Force re-fetch therapists
+        setTherapists([]);
+        setTimeout(async () => {
+          try {
+            alert("Therapist updated successfully!");
+            const updatedTherapists = await getTherapists(shopId);
+            setTherapists(updatedTherapists);
+          } catch (refreshError) {
+            console.error("Error refreshing therapist list:", refreshError);
+            alert("Therapist updated successfully! Please refresh to see updates.");
+          }
+        }, 500);
+      }
     }
     catch(err) {
       console.error("Error updating Therapist: ", err);
@@ -283,6 +319,7 @@ export default function MassageShopPage() {
       }
       
       const url = `https://antony-massage-backend-production.up.railway.app/api/v1/therapists/${selecting2DeleteTherapist}`;
+
       const res = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -388,6 +425,7 @@ export default function MassageShopPage() {
             sexval = {editingTherapistSex}
             specialtiesval = {editingTherapistSpecialties}
             availabilityval = {editingTherapistAvailability}
+            therapistIdval= {editingTherapistId}
             onClose={handleCloseEditTherapist}
             onUpdate={handleUpdateTherapist}
           />

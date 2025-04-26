@@ -11,7 +11,7 @@ type TherapistListProps = {
   therapists: Therapist[];
   isAdmin: boolean;
   onAddTherapist: () => void;
-  onEditTherapist: (name:string, tel:string, birthdate:string, sex:string, specialties:string[], availability:string[]) => void;
+  onEditTherapist: (name:string, tel:string, birthdate:string, sex:string, specialties:string[], availability:string[], id:string) => void;
   // onEditTherapist: () => void;
   onDeleteTherapist: (therapist: Therapist) => void;
 };
@@ -106,7 +106,7 @@ export default function TherapistList({
                   {isAdmin && (
                     <div className="flex space-x-2 mt-2 justify-end">
                       <button
-                        onClick={() => onEditTherapist(t.name, t.tel ,t.birthDate, t.sex, t.specialty, t.available)} 
+                        onClick={() => onEditTherapist(t.name, t.tel ,t.birthDate, t.sex, t.specialty, t.available, t._id)} 
                         className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-blue-400">
                         Edit
                       </button>

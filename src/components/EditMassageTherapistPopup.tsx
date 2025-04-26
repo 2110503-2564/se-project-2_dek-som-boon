@@ -15,6 +15,7 @@ export default function EditMassageTherapistPopup({
   sexval,
   specialtiesval,
   availabilityval,
+  therapistIdval,
   onClose,
   onUpdate
 }: {
@@ -24,6 +25,7 @@ export default function EditMassageTherapistPopup({
   sexval: string;
   specialtiesval: string[];
   availabilityval: string[];
+  therapistIdval: string;
   onClose: () => void;
   onUpdate: (
     name: string,
@@ -31,7 +33,8 @@ export default function EditMassageTherapistPopup({
     birthdate: string,
     sex: string,
     specialties: string[],
-    availability: string[]
+    availability: string[],
+    therapistId: string
   ) => void;
 }) {
   const router = useRouter();
@@ -98,7 +101,8 @@ export default function EditMassageTherapistPopup({
       formattedDate,
       sex.toLowerCase(), // Ensure lowercase
       specialties,
-      fullDayNames // Make sure to pass the full day names
+      fullDayNames, // Make sure to pass the full day names
+      therapistIdval
     );
   };
 
