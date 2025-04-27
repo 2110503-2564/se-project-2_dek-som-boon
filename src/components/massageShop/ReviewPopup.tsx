@@ -18,7 +18,7 @@ export default function ReviewPopup({
   onSubmit
 }: ReviewPopupProps) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm backdrop-brightness-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.5)]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h3 className="block text-lg font-semibold mb-2 w-full text-center">Review</h3>
 

@@ -60,7 +60,7 @@ export default function Reservation() {
   const handleReservation = async () => {
     const token = localStorage.getItem("token");
     if (!selectedShop || !selectedDate || !selectedTherapist || !token) {
-      alert("Please select a shop, date, and therapist.");
+      alert("Please select reservation date");
       return;
     }
 

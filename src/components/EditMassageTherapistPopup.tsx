@@ -37,8 +37,11 @@ export default function EditMassageTherapistPopup({
     therapistId: string
   ) => void;
 }) {
+  const [fname, lname] = nameval.split(' ');
+
   const router = useRouter();
-  const [name, setName] = useState(nameval);
+  const [firstname, setFirstname] = useState(fname);
+  const [lastname, setLastname] = useState(lname);
   const [tel, setTel] = useState(telval);
   const [birthdate, setBirthdate] = useState<Dayjs | null>(birthdateval);
   const [sex, setSex] = useState(sexval);
@@ -73,7 +76,7 @@ export default function EditMassageTherapistPopup({
   }, [])
 
   const handleSubmit = () => {
-    if (!name || !tel || !birthdate || availability.length === 0||specialties.length===0) {
+    if (!firstname || !lastname || !tel || !birthdate || availability.length === 0||specialties.length===0) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -94,6 +97,9 @@ export default function EditMassageTherapistPopup({
     
     // Format date as expected by API (YYYY-MM-DDT00:00:00.000Z)
     const formattedDate = birthdate ? birthdate.format("YYYY-MM-DD") + "T00:00:00.000Z" : "";
+
+    // Combine fname and lastname as name
+    const name = firstname + " " + lastname;
     
     onUpdate(
       name,
@@ -113,15 +119,28 @@ export default function EditMassageTherapistPopup({
       <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg mx-auto border border-gray-200">
         <h2 className="text-lg font-semibold mb-5 text-center text-black">Edit Massage Therapist</h2>
 
-        <div className="mb-3">
-          <label className="block text-sm font-medium mb-1 text-black">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter Massage Therapist name"
-            className="w-full rounded-md p-3 bg-gray-100 text-sm text-black border border-gray-300"
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="mb-3">
+            <label className="block text-sm font-medium mb-1 text-black">Name</label>
+            <input
+              type="text"
+              value={fname}
+              onChange={(e) => setFirstname(e.target.value)}
+              placeholder="Enter therapist firstname"
+              className="w-full rounded-md p-3 bg-gray-100 text-sm text-black border border-gray-300"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="block text-sm font-medium mb-1 text-black">Lastname</label>
+            <input
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              placeholder="Enter therapist lastname"
+              className="w-full rounded-md p-3 bg-gray-100 text-sm text-black border border-gray-300"
+            />
+          </div>
         </div>
 
         <div className="mb-3">
@@ -197,13 +216,13 @@ export default function EditMassageTherapistPopup({
         <div className="flex justify-between mt-6">
           <button
             onClick={onClose}
-            className="w-[45%] bg-[#1E1B4B] text-white py-2.5 rounded-md font-medium text-base hover:bg-[#2c2960]"
+            className="w-[45%] bg-[#1E1B4B] text-white py-2.5 rounded-md font-medium text-base hover:bg-[#2c2960] hover:cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="w-[45%] bg-green-600 text-white py-2.5 rounded-md font-medium text-base hover:bg-green-500"
+            className="w-[45%] bg-green-600 text-white py-2.5 rounded-md font-medium text-base hover:bg-green-500 hover:cursor-pointer"
           >
             Update
           </button>
