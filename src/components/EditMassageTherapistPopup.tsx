@@ -121,7 +121,7 @@ export default function EditMassageTherapistPopup({
 
         <div className="grid grid-cols-2 gap-4">
           <div className="mb-3">
-            <label className="block text-sm font-medium mb-1 text-black">Name</label>
+            <label className="block text-sm font-medium mb-1 text-black">First Name</label>
             <input
               type="text"
               value={firstname}
@@ -132,7 +132,7 @@ export default function EditMassageTherapistPopup({
           </div>
 
           <div className="mb-3">
-            <label className="block text-sm font-medium mb-1 text-black">Lastname</label>
+            <label className="block text-sm font-medium mb-1 text-black">Last Name</label>
             <input
               type="text"
               value={lastname}
