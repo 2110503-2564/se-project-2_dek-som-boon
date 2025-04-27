@@ -38,12 +38,13 @@ export interface ReserveItem {
 
 export interface Review {
   _id: string;
-  title: string;
+  user: {
+    _id: string;
+    name: string;
+    username: string;
+  };
   comment: string;
   score: number;
-  user: string;
-  massageShop: string;
-  createdAt: string;
 }
 
 export interface ReviewJson {
