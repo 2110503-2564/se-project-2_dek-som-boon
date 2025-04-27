@@ -124,7 +124,7 @@ export default function EditMassageTherapistPopup({
             <label className="block text-sm font-medium mb-1 text-black">Name</label>
             <input
               type="text"
-              value={fname}
+              value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               placeholder="Enter therapist firstname"
               className="w-full rounded-md p-3 bg-gray-100 text-sm text-black border border-gray-300"
