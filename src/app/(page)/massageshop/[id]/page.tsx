@@ -339,7 +339,7 @@ export default function MassageShopPage() {
       // Update therapist list
       setTherapists(therapists.filter(t => t._id !== selecting2DeleteTherapist));
     } catch (error: any) {
-      console.error('Delete therapist error:', error);
+      // console.error('Delete therapist error:', error);
       alert(error.message || "Failed to delete. Please try again later.");
     }
   };
@@ -393,7 +393,7 @@ export default function MassageShopPage() {
 
       {/* Delete review popup */}
       {showDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
           <ConfirmPopup
             onClose={() => {
               setShowDelete(false);
@@ -407,7 +407,7 @@ export default function MassageShopPage() {
 
       {/* Add therapist popup */}
       {showAddTherapist && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
           <AddMassageTherapistPopup
             onClose={() => setShowAddTherapist(false)}
             onAdd={handleAddTherapist}
@@ -417,7 +417,7 @@ export default function MassageShopPage() {
 
     {/* Edit Therapist popup */}
     {showEditTherapistPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
           <EditMassageTherapistPopup
             nameval = {editingTherapistName}
             telval = {editingTherapistTel}
@@ -434,7 +434,7 @@ export default function MassageShopPage() {
 
       {/* Delete therapist popup */}
       {showDeleteTherapist && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
           <ConfirmPopup 
             onClose={() => {
               setShowDeleteTherapist(false);
