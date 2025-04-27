@@ -26,6 +26,20 @@ export default function TherapistList({
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
+  // Helper function to convert full day names to short format
+  const formatDayName = (day: string): string => {
+    const dayMap: Record<string, string> = {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
+    };
+    return dayMap[day] || day;
+  };
+
   return (
     <>
       <div className="mb-10" />
@@ -33,26 +47,26 @@ export default function TherapistList({
         Massage Therapist
       </h2>
 
-      <div className="relative w-full max-w-5xl mx-auto mt-8 hover:cursor-pointer">
-        {/* Navigation Arrows */}
+      <div className="relative w-full max-w-5xl mx-auto m-8">
+        {/* Navigation Arrows - Add hover:cursor-pointer to buttons only */}
         <button
           ref={prevRef}
           aria-label="Previous therapist"
-          className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+          className="absolute z-10 left-[-40px] top-1/2 transform -translate-y-10 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 hover:cursor-pointer border border-gray-300"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
         <button
           ref={nextRef}
           aria-label="Next therapist"
-          className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 border border-gray-300"
+          className="absolute z-10 right-[-40px] top-1/2 transform -translate-y-10 bg-white rounded-full shadow-md w-8 h-8 flex items-center justify-center hover:bg-gray-100 hover:cursor-pointer border border-gray-300"
         >
           <ArrowRight className="w-4 h-4" />
         </button>
 
         <Swiper
           modules={[Navigation]}
-          spaceBetween={24}
+          spaceBetween={20} 
           slidesPerView={3}
           navigation={{
             prevEl: prevRef.current!,
@@ -65,54 +79,49 @@ export default function TherapistList({
             swiper.params.navigation.nextEl = nextRef.current;
           }}
           breakpoints={{
-            320: { slidesPerView: 1 },
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+            320: { slidesPerView: 1, spaceBetween: 20 },
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 20 },
           }}
           loop
         >
           {therapists.map((t, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[350px] flex flex-col items-center gap-y-4 border-gray-300">
-                <img
-                  src={`/image/${t.sex}.png`}
-                  alt={t.name}
-                  className="w-24 h-24 mx-auto rounded-full object-cover border-2 border-gray-300"
-                />
-                <div className="text-left w-full space-y-1">
-                  <span className="block font-semibold text-lg">{t.name}</span>
-                  {/* <span className="block text-sm text-gray-700">Tel: {t.tel}</span> */}
-                  <span className="block text-sm text-gray-700">
-                    Age: {t.age} | Gender: {t.sex.charAt(0).toUpperCase() + t.sex.slice(1)}
-                  </span>
-                  <div className="text-sm text-gray-700 space-y-1">
-                    <div>
-                      <span className="font-semibold">Specialties:</span>
-                      <ul className="list-disc list-inside ml-2">
-                        {t.specialty.map((s: string, i: number) => (
-                          <li key={i}>{s}</li>
+              <div className="p-5"> {/* เพิ่ม div ครอบและใส่ padding เพื่อให้เงาแสดงผลได้เต็มที่ */}
+                <div className="bg-white rounded-xl shadow-[0_10px_15px_-3px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_20px_-5px_rgba(0,0,0,0.3)] transition-shadow px-5 py-4 text-left mx-auto w-[300px] h-[400px] flex flex-col border border-gray-200">
+                  <div className="flex justify-center my-3">
+                    <img
+                      src={`/image/${t.sex}.png`}
+                      alt={t.name}
+                      className="w-24 h-24 rounded-full object-cover shadow-lg border-3 border-gray-300"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-medium text-center mb-2">{t.name}</h3>
+                    <p className="text-sm text-gray-600"><span className="font-semibold">Tel:</span> {t.tel}</p>
+                    <p className="text-sm text-gray-600"><span className="font-semibold">Age:</span> {t.age} | <span className="font-semibold">sex:</span> {t.sex}</p>
+                    
+                    <div className="text-sm text-gray-600 mt-2">
+                      <p className="font-semibold">Specialties:</p>
+                      <ul className="list-disc pl-5 mt-1">
+                        {t.specialty.map((spec, i) => (
+                          <li key={i} className="text-sm">{spec}</li>
                         ))}
                       </ul>
-                    </div>
-                    <div>
-                      <span className="font-semibold">Availability:</span>
-                      <ul className="list-disc list-inside ml-2">
-                        {t.available.map((a: string, i: number) => (
-                          <li key={i}>{a}</li>
-                        ))}
-                      </ul>
+                      <p className="font-semibold mt-1">Availability: <span className="font-normal">{t.available.map(formatDayName).join(', ')}</span></p>
                     </div>
                   </div>
+                  
                   {isAdmin && (
-                    <div className="flex space-x-2 mt-2 justify-end">
+                    <div className="flex space-x-2 mt-auto pt-2 justify-end">
                       <button
-                        onClick={() => onEditTherapist(t.name, t.tel ,t.birthDate, t.sex, t.specialty, t.available, t._id)} 
-                        className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-blue-400">
+                        onClick={() => onEditTherapist(t.name, t.tel, t.birthDate, t.sex, t.specialty, t.available, t._id)} 
+                        className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded shadow hover:bg-blue-400 hover:shadow-md hover:cursor-pointer transition-all">
                         Edit
                       </button>
                       <button
                         onClick={() => onDeleteTherapist(t)}
-                        className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded hover:bg-red-500"
+                        className="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded shadow hover:bg-red-500 hover:shadow-md hover:cursor-pointer transition-all"
                       >
                         Delete
                       </button>
@@ -125,9 +134,9 @@ export default function TherapistList({
         </Swiper>
 
         {isAdmin && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-10">
             <button
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow hover:cursor-pointer"
               onClick={onAddTherapist}
             >
               Add Massage Therapist
