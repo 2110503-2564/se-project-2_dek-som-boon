@@ -71,7 +71,7 @@ export default function EditReservation({
         <label className="block text-lg font-semibold mb-2 w-full">
           Date Reservation
         </label>
-        <DateReserve selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <DateReserve selectedDate={selectedDate} setSelectedDate={setSelectedDate} allowDay={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']} allowPastDay={false} lock={!selectedShop}/>
       </div>
 
       <div className="mb-6">

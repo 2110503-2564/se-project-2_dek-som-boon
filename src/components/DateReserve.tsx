@@ -7,9 +7,15 @@ import dayjs from "dayjs";
 export default function DateReserve({
   selectedDate,
   setSelectedDate,
+  lock,
+  allowDay,
+  allowPastDay,
 }: {
   selectedDate: dayjs.Dayjs | null;
   setSelectedDate: (date: dayjs.Dayjs | null) => void;
+  lock: boolean;
+  allowDay: string[];
+  allowPastDay: boolean;
 }) {
   return (
     // <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -24,6 +30,22 @@ export default function DateReserve({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="w-full">
         <DatePicker
+        
+        disabled={lock}
+          shouldDisableDate={(date) => {
+            // const isMonday = dayjs(date).day() === 1; // 1 = Monday
+            const dayOfWeek = dayjs(date).format('dddd'); // Get the full day name (e.g., "Monday", "Tuesday", etc.)
+            
+            let isBefore = dayjs(date).isBefore(dayjs(), 'day'); // Disable past dates
+            if (allowPastDay) {
+              isBefore = false;
+            }
+
+            // const isAfter = dayjs(date).isAfter(dayjs(), 'day'); // Disable past dates
+            const isToday = dayjs(date).isSame(dayjs(), 'day');
+            
+            return !allowDay.includes(dayOfWeek) || isBefore || isToday; // Disable Mondays, past dates, and today
+          }}
           className="w-full bg-gray-100"
           value={selectedDate}
           onChange={(newValue) => setSelectedDate(newValue)}
@@ -46,6 +68,7 @@ export default function DateReserve({
                   color: "#374151", // Tailwind text-gray-700 for the calendar icon
                 },
               },
+              placeholder: lock ? 'Please select shop' : 'MM/DD/YYYY', 
             },
           }}
         />

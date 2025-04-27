@@ -110,7 +110,7 @@ export default function AddMassageTherapistPopup({
         <div className="grid grid-cols-2 gap-4 mb-3">
           <div>
             <label className="block text-sm font-medium mb-1 text-black">Birthdate</label>
-            <DateReserve selectedDate={birthdate} setSelectedDate={setBirthdate} />
+            <DateReserve selectedDate={birthdate} setSelectedDate={setBirthdate} allowDay={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']} allowPastDay={true} lock={false}/>
 
             <label className="block text-sm font-medium mt-4 mb-1 text-black">Gender</label>
             <select

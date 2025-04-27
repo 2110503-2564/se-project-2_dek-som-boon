@@ -32,6 +32,7 @@ export interface ReserveItem {
   reserveDate: string,
   user: string,
   massageShop: MassageItem,
+  therapist: Therapist,
   createdAt: Dayjs
 }
 

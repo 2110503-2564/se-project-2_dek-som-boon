@@ -1,12 +1,14 @@
 export interface ReservationPayload {
     massageShopId: string;
     reserveDate: string; // ISO string format (e.g., 2025-03-23T14:00:00Z)
+    therapist: string;
     token: string;
   }
   
   export default async function createReservation({
     massageShopId,
     reserveDate,
+    therapist,
     token,
   }: ReservationPayload) {
     console.log("createReservation", massageShopId, reserveDate, token);
@@ -17,7 +19,10 @@ export interface ReservationPayload {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ reserveDate }),
+        body: JSON.stringify({ 
+          reserveDate, 
+          therapist
+         }),
       });
   
       const resText = await response.text(); // อ่าน raw response

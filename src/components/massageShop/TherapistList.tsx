@@ -75,15 +75,15 @@ export default function TherapistList({
             <SwiperSlide key={idx}>
               <div className="bg-white border rounded-xl shadow-md px-6 py-6 text-center transition hover:shadow-lg mx-auto w-[240px] min-h-[350px] flex flex-col items-center gap-y-4 border-gray-300">
                 <img
-                  src="/image/antony.jpg"
+                  src={`/image/${t.sex}.png`}
                   alt={t.name}
                   className="w-24 h-24 mx-auto rounded-full object-cover border-2 border-gray-300"
                 />
                 <div className="text-left w-full space-y-1">
                   <span className="block font-semibold text-lg">{t.name}</span>
-                  <span className="block text-sm text-gray-700">Tel: {t.tel}</span>
+                  {/* <span className="block text-sm text-gray-700">Tel: {t.tel}</span> */}
                   <span className="block text-sm text-gray-700">
-                    Age: {t.age} | Gender: {t.sex}
+                    Age: {t.age} | Gender: {t.sex.charAt(0).toUpperCase() + t.sex.slice(1)}
                   </span>
                   <div className="text-sm text-gray-700 space-y-1">
                     <div>
