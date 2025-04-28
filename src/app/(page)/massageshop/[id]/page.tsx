@@ -155,7 +155,7 @@ export default function MassageShopPage() {
         setEditId(null);
         fetchReviews();
       } else {
-        alert("Something went wrong.");
+        alert("The comment must be less than 250 words.");
       }
     } catch (error) {
       console.error("Error submitting review:", error);
