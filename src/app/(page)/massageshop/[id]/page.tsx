@@ -190,9 +190,8 @@ export default function MassageShopPage() {
       
       if (res.ok) {
         setComments((prev) => prev.filter((c) => c._id !== selecting2Delete));
-      } else {
-        alert("Failed to delete.");
-      }
+      } 
+      alert("Delete review successful!");
     } catch (error) {
       console.error("Error deleting review:", error);
       alert("Failed to delete review.");

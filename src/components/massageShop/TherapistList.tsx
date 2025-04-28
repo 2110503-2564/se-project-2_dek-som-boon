@@ -48,6 +48,11 @@ export default function TherapistList({
       </h2>
 
       <div className="relative w-full max-w-5xl mx-auto m-8">
+        {therapists.length === 0 && (
+          <div className="text-center py-12 bg-gray-50 rounded-lg my-6">
+            <p className="text-gray-500">No therapists available at this massage shop</p>
+          </div>
+        )}
         {/* Navigation Arrows - Add hover:cursor-pointer to buttons only */}
         <button
           ref={prevRef}
@@ -66,8 +71,9 @@ export default function TherapistList({
 
         <Swiper
           modules={[Navigation]}
-          spaceBetween={20} 
-          slidesPerView={3}
+          spaceBetween={20}
+          slidesPerView={therapists.length === 1 ? 1 : therapists.length === 2 ? 2 : 3}
+          centeredSlides={therapists.length === 1}
           navigation={{
             prevEl: prevRef.current!,
             nextEl: nextRef.current!,
@@ -80,10 +86,10 @@ export default function TherapistList({
           }}
           breakpoints={{
             320: { slidesPerView: 1, spaceBetween: 20 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 20 },
+            640: { slidesPerView: therapists.length === 1 ? 1 : 2, spaceBetween: 20, centeredSlides: therapists.length === 1 },
+            1024: { slidesPerView: therapists.length === 1 ? 1 : therapists.length === 2 ? 2 : 3, spaceBetween: 20, centeredSlides: therapists.length === 1 },
           }}
-          loop
+          loop={therapists.length > 1}
         >
           {therapists.map((t, idx) => (
             <SwiperSlide key={idx}>
@@ -98,8 +104,8 @@ export default function TherapistList({
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-lg font-medium text-center mb-2">{t.name}</h3>
-                    <p className="text-sm text-gray-600"><span className="font-semibold">Tel:</span> {t.tel}</p>
-                    <p className="text-sm text-gray-600"><span className="font-semibold">Age:</span> {t.age} | <span className="font-semibold">sex:</span> {t.sex}</p>
+                    {/*<p className="text-sm text-gray-600"><span className="font-semibold">Tel:</span> {t.tel}</p>*/}
+                    <p className="text-sm text-gray-600"><span className="font-semibold">Age:</span> {t.age} | <span className="font-semibold">Gender:</span> {t.sex}</p>
                     
                     <div className="text-sm text-gray-600 mt-2">
                       <p className="font-semibold">Specialties:</p>
@@ -141,12 +147,6 @@ export default function TherapistList({
             >
               Add Massage Therapist
             </button>
-          </div>
-        )}
-
-        {therapists.length === 0 && (
-          <div className="text-center py-12 bg-gray-50 rounded-lg mt-6">
-            <p className="text-gray-500">No therapists available at this massage shop.</p>
           </div>
         )}
       </div>
