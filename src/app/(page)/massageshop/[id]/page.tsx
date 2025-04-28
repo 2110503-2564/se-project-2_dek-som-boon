@@ -329,6 +329,7 @@ export default function MassageShopPage() {
       });
       
       const data = await res.json();
+
       if (!res.ok) {
         throw new Error(data.message || 'Failed to delete therapist');
       }
@@ -338,6 +339,7 @@ export default function MassageShopPage() {
       
       // Update therapist list
       setTherapists(therapists.filter(t => t._id !== selecting2DeleteTherapist));
+      alert("Therapist deleted");
     } catch (error: any) {
       // console.error('Delete therapist error:', error);
       alert(error.message || "Failed to delete. Please try again later.");

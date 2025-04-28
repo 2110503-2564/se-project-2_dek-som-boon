@@ -145,7 +145,7 @@ export default function AddMassageTherapistPopup({
           <div>
             <label className="block text-sm font-medium mb-1 text-black">Specialties</label>
             <div className="flex flex-col justify-between h-full gap-2 pb-10">
-              {["Traditional Health Massage Therapist", "Thai Traditional Medicine Assistant", "Thai Traditional Medicine Doctor"].map((specialty) => (
+              {["Aromatherapy massage", "Thai Traditional massage", "Sports massage","Swedish massage"].map((specialty) => (
                 <label key={specialty} className="inline-flex items-center text-sm text-black">
                   <input
                     type="checkbox"
