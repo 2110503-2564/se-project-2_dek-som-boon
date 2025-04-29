@@ -18,15 +18,6 @@ export default function DateReserve({
   allowPastDay: boolean;
 }) {
   return (
-    // <LocalizationProvider dateAdapter={AdapterDayjs}>
-    //   <div className="w-full">
-    //     <DatePicker
-    //       className="w-full bg-white"
-    //       value={selectedDate}
-    //       onChange={(newValue) => setSelectedDate(newValue)}
-    //     />
-    //   </div>
-    // </LocalizationProvider>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="w-full">
         <DatePicker
