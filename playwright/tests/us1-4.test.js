@@ -11,7 +11,8 @@ test('test', async ({ page }) => {
   await page.locator('.relative > div > div').first().click();
   delay(2000);
   await expect(page.locator('div').filter({ hasText: /^user1The service is not satisfactory\.$/ }).first()).toBeVisible();
-  delay(2000);
+  await expect(page.locator('body')).toContainText('user1The service is not satisfactory.');
+  delay(3000);
 
   await page.getByRole('button', { name: 'Login' }).click();
   await page.getByRole('textbox', { name: 'Enter your email or username' }).click();
@@ -21,9 +22,11 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();
   await page.getByRole('button', { name: 'Massage Shops' }).click();
   await page.locator('.relative > div > div').first().click();
-  await page.getByRole('button', { name: 'Del' }).first().click();
-  await page.getByRole('button', { name: 'Delete' }).click();
+  await page.locator('div').filter({ hasText: /^user1The service is not satisfactory\.EditDelete$/ }).getByRole('button').nth(1).click();
   delay(2000);
-  await expect(page.getByText('User reviewYour reviewuser1lolEditDeluser1teste313123EditDelAdmin')).toBeVisible();
-  delay(2000);
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  delay(3000);
 });

@@ -21,7 +21,8 @@ test('test', async ({ page }) => {
   await page.locator('.bg-white > div > svg:nth-child(2) > path').click();
   await page.getByRole('button', { name: 'Post' }).click();
   delay(2000);
-  await expect(page.getByText('user1The service is not satisfactory.EditDel')).toBeVisible();
+  await expect(page.getByText('user1The service is not satisfactory.EditDelete')).toBeVisible();
+  await expect(page.locator('body')).toContainText('user1The service is not satisfactory.EditDelete');
   delay(2000);
 
   await page.getByRole('button', { name: 'Logout' }).click();
@@ -29,5 +30,6 @@ test('test', async ({ page }) => {
   await page.locator('.relative > div > div').first().click();
   delay(2000);
   await expect(page.locator('div').filter({ hasText: /^user1The service is not satisfactory\.$/ }).first()).toBeVisible();
-  delay(2000);
+  await expect(page.locator('body')).toContainText('user1The service is not satisfactory.');
+  delay(3000);
 });
